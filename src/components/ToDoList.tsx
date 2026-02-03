@@ -26,13 +26,13 @@ export default function ToDoList() {
     }
 
     return (
-        <>
+        <section className="max-w-md mx-auto p-6">
             <TaskInput onAdd={addTaskToList}/>
-            <ul>
+            <ul className="mt-4 space-y-2">
                 {taskList.map(task => (
                     <TaskItem key={task.id} task={task} onToggle={toggleTask}/>
                 ))}
             </ul>
-        </>
+        </section>
     )
 }
