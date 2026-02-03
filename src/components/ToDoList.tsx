@@ -7,13 +7,18 @@ import type { Task } from '../types';
 export default function ToDoList() {
     const [taskList, setTaskList] = useState<Task[]>([]);
 
+    function removeTaskFromList(id: number) {
+        const newTaskList = taskList.filter((task) => task.id !== id);
+        setTaskList(newTaskList);
+    }
+
     function addTaskToList(taskTitle: string) {
         const newTask: Task = {
             id: Date.now(), // TODO: improve this later
             title: taskTitle,
             isDone: false
         }
-        const newTaskList = [...taskList, newTask];
+        const newTaskList = [newTask, ...taskList, ];
         setTaskList(newTaskList);
     }
 
@@ -30,7 +35,7 @@ export default function ToDoList() {
             <TaskInput onAdd={addTaskToList}/>
             <ul className="mt-4 space-y-2">
                 {taskList.map(task => (
-                    <TaskItem key={task.id} task={task} onToggle={toggleTask}/>
+                    <TaskItem key={task.id} task={task} onToggle={toggleTask} onDelete={removeTaskFromList}/>
                 ))}
             </ul>
         </section>
