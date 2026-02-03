@@ -18,28 +18,53 @@ export default function TaskItem({task, onToggle, onDelete}: ITaskItemProps) {
     };
 
     return (
-        <div
+        <li
             ref={setNodeRef}
             style={style}
             {...attributes}
-            className='flex items-center gap-3 p-3 bg-gray-500 rounded-lg shadow-sm'
+            className="group flex items-center gap-3 rounded-lg bg-white p-3 shadow-sm ring-1 ring-neutral-100 transition-shadow hover:shadow-md hover:ring-neutral-200"
         >
-    
-            {/* Drag handle - only this is draggable */}
-            {!task.isDone && <span {...listeners} className="cursor-grab">
-                ⠿
-            </span>}
+            {/* Drag handle */}
+            {!task.isDone && (
+                <span
+                    {...listeners}
+                    className="cursor-grab touch-none text-neutral-300 opacity-0 transition-opacity hover:text-neutral-400 group-hover:opacity-100"
+                    aria-label="Drag to reorder"
+                >
+                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 16 16">
+                        <circle cx="4" cy="3" r="1.5"/>
+                        <circle cx="4" cy="8" r="1.5"/>
+                        <circle cx="4" cy="13" r="1.5"/>
+                        <circle cx="10" cy="3" r="1.5"/>
+                        <circle cx="10" cy="8" r="1.5"/>
+                        <circle cx="10" cy="13" r="1.5"/>
+                    </svg>
+                </span>
+            )}
 
+            {/* Checkbox */}
             <input
-                className='w-5 h-5'
                 type="checkbox"
                 checked={task.isDone}
                 onChange={() => onToggle(task.id)}
+                className="h-4 w-4 cursor-pointer rounded border-neutral-300 text-neutral-800 focus:ring-2 focus:ring-neutral-200 focus:ring-offset-0"
             />
-            <span className={task.isDone ? "line-through text-gray-400" : ""}>
+
+            {/* Title */}
+            <span className={`flex-1 text-sm ${task.isDone ? "text-neutral-400 line-through" : "text-neutral-700"}`}>
                 {task.title}
             </span>
-            <button onClick={() => onDelete(task.id)}>Delete</button>
-        </div>
-      )
+
+            {/* Delete button */}
+            <button
+                onClick={() => onDelete(task.id)}
+                className="rounded p-1 text-neutral-300 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-200 group-hover:opacity-100"
+                aria-label="Delete task"
+            >
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </li>
+    )
 }

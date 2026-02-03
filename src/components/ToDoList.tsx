@@ -56,26 +56,51 @@ export default function ToDoList() {
     }
 
     return (
-        <section className="max-w-md mx-auto p-6">
+        <div className="space-y-8">
             <TaskInput onAdd={addTaskToList}/>
-            
-            <h2>Current Tasks</h2>
-            <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                <SortableContext items={activeTasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
-                    <ul className="mt-4 space-y-2">
-                        {activeTasks.map(task => (
+
+            {/* Active Tasks */}
+            <section>
+                <div className="flex items-center gap-2 mb-3">
+                    <h2 className="text-xs font-medium uppercase tracking-wider text-neutral-400">
+                        Tasks
+                    </h2>
+                    {activeTasks.length > 0 && (
+                        <span className="text-xs text-neutral-400">{activeTasks.length}</span>
+                    )}
+                </div>
+                <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                    <SortableContext items={activeTasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
+                        <ul className="space-y-1">
+                            {activeTasks.map(task => (
+                                <TaskItem key={task.id} task={task} onToggle={toggleTask} onDelete={removeTaskFromList}/>
+                            ))}
+                        </ul>
+                    </SortableContext>
+                </DndContext>
+                {activeTasks.length === 0 && (
+                    <p className="py-8 text-center text-sm text-neutral-400">
+                        No tasks yet. Add one above to get started.
+                    </p>
+                )}
+            </section>
+
+            {/* Completed Tasks */}
+            {completedTasks.length > 0 && (
+                <section>
+                    <div className="flex items-center gap-2 mb-3">
+                        <h2 className="text-xs font-medium uppercase tracking-wider text-neutral-400">
+                            Completed
+                        </h2>
+                        <span className="text-xs text-neutral-400">{completedTasks.length}</span>
+                    </div>
+                    <ul className="space-y-1">
+                        {completedTasks.map(task => (
                             <TaskItem key={task.id} task={task} onToggle={toggleTask} onDelete={removeTaskFromList}/>
                         ))}
                     </ul>
-                </SortableContext>
-            </DndContext>
-            <br />
-            <h2>History</h2>
-            <ul className="mt-4 space-y-2">
-                {completedTasks.map(task => (
-                    <TaskItem key={task.id} task={task} onToggle={toggleTask} onDelete={removeTaskFromList}/>
-                ))}
-            </ul>
-        </section>
+                </section>
+            )}
+        </div>
     )
 }
