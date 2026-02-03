@@ -1,3 +1,6 @@
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
 import type { Task } from '../types';
 
 interface ITaskItemProps {
@@ -7,8 +10,26 @@ interface ITaskItemProps {
 }
 
 export default function TaskItem({task, onToggle, onDelete}: ITaskItemProps) {
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: task.id });
+    
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
+
     return (
-        <div className='flex items-center gap-3 p-3 bg-gray-500 rounded-lg shadow-sm'>
+        <div
+            ref={setNodeRef}
+            style={style}
+            {...attributes}
+            className='flex items-center gap-3 p-3 bg-gray-500 rounded-lg shadow-sm'
+        >
+    
+            {/* Drag handle - only this is draggable */}
+            {!task.isDone && <span {...listeners} className="cursor-grab">
+                ⠿
+            </span>}
+
             <input
                 className='w-5 h-5'
                 type="checkbox"
@@ -17,8 +38,8 @@ export default function TaskItem({task, onToggle, onDelete}: ITaskItemProps) {
             />
             <span className={task.isDone ? "line-through text-gray-400" : ""}>
                 {task.title}
-            </span>            
+            </span>
             <button onClick={() => onDelete(task.id)}>Delete</button>
         </div>
-    )
+      )
 }
