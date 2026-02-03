@@ -32,9 +32,17 @@ export default function ToDoList() {
 
     return (
         <section className="max-w-md mx-auto p-6">
+            <h2>Current Tasks</h2>
             <TaskInput onAdd={addTaskToList}/>
             <ul className="mt-4 space-y-2">
-                {taskList.map(task => (
+                {taskList.filter(task => !task.isDone).map(task => (
+                    <TaskItem key={task.id} task={task} onToggle={toggleTask} onDelete={removeTaskFromList}/>
+                ))}
+            </ul>
+            <br />
+            <h2>History</h2>
+            <ul className="mt-4 space-y-2">
+                {taskList.filter(task => task.isDone).map(task => (
                     <TaskItem key={task.id} task={task} onToggle={toggleTask} onDelete={removeTaskFromList}/>
                 ))}
             </ul>
