@@ -1,10 +1,8 @@
 import { useState } from "react";
 import TaskItem from "./TaskItem";
 import TaskInput from "./TaskInput";
-
-import { DndContext, closestCenter } from '@dnd-kit/core';
+import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
-
 import { Task, CategoryEnum } from '../types';
 
 export default function ToDoList() {
@@ -26,25 +24,27 @@ export default function ToDoList() {
     }
 
     function toggleTask(id: number) {
-        setTaskList(taskList.map(task =>
-            task.id === id
-                ? { ...task, isDone: !task.isDone }
-                : task
-        ));
-    }
+        const task = taskList.find(t => t.id === id);
+        if (!task) return;
 
-    function updateTaskCategory(id: number, category: CategoryEnum | undefined) {
-        setTaskList(taskList.map(task =>
-            task.id === id
-                ? { ...task, category }
-                : task
-        ));
+        const isNowDone = !task.isDone;
+        const updatedTask = { ...task, isDone: isNowDone };
+        const otherTasks = taskList.filter(t => t.id !== id);
+
+        const active = otherTasks.filter(t => !t.isDone);
+        const completed = otherTasks.filter(t => t.isDone);
+
+        if (isNowDone) {
+            setTaskList([...active, updatedTask, ...completed]);
+        } else {
+            setTaskList([updatedTask, ...active, ...completed]);
+        }
     }
 
     const activeTasks = taskList.filter(t => !t.isDone);
     const completedTasks = taskList.filter(t => t.isDone);
 
-    function handleDragEnd(event: any) {
+    function handleDragEnd(event: DragEndEvent) {
         const { active, over } = event;
 
         if (!over || active.id === over.id) {

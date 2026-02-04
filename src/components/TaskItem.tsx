@@ -67,7 +67,7 @@ export default function TaskItem({ task, onToggle, onDelete }: ITaskItemProps) {
                     onClick={() => hasDescription && setIsExpanded(!isExpanded)}
                 >
                     <div className="flex items-center gap-2">
-                        <span className={`text-sm ${task.isDone ? "text-neutral-400 line-through" : "text-neutral-700"}`}>
+                        <span className={`text-sm ${task.isDone ? "text-neutral-400 line-through" : ""}`}>
                             {categoryConfig?.icon} {task.title}
                         </span>
                         {hasDescription && (
