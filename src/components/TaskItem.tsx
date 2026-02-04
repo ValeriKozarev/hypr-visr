@@ -29,18 +29,18 @@ export default function TaskItem({ task, onToggle, onDelete }: ITaskItemProps) {
             ref={setNodeRef}
             style={style}
             {...attributes}
-            className={`group rounded-lg shadow-sm ring-1 transition-shadow hover:shadow-md ${
+            className={`group rounded border shadow-lg transition-all hover:shadow-xl ${
                 categoryConfig
                     ? `${categoryConfig.bgColor} ${categoryConfig.borderColor} ${categoryConfig.color}`
-                    : 'bg-white ring-neutral-100 hover:ring-neutral-200 text-neutral-700'
-            }`}
+                    : 'border-zinc-700 bg-zinc-800 text-neutral-100'
+            } ${task.isDone ? 'opacity-60' : ''}`}
         >
             <div className="flex items-center gap-3 p-3">
                 {/* Handle for drag 'n drop */}
                 {!task.isDone && (
                     <span
                         {...listeners}
-                        className="cursor-grab touch-none text-neutral-300 opacity-0 transition-opacity hover:text-neutral-400 group-hover:opacity-100"
+                        className="cursor-grab touch-none text-zinc-600 opacity-0 transition-opacity hover:text-zinc-400 group-hover:opacity-100"
                         aria-label="Drag to reorder"
                     >
                         <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 16 16">
@@ -59,7 +59,7 @@ export default function TaskItem({ task, onToggle, onDelete }: ITaskItemProps) {
                     type="checkbox"
                     checked={task.isDone}
                     onChange={() => onToggle(task.id)}
-                    className="h-4 w-4 shrink-0 cursor-pointer rounded border-neutral-300 text-neutral-800 focus:ring-2 focus:ring-neutral-200 focus:ring-offset-0"
+                    className="h-4 w-4 shrink-0 cursor-pointer rounded border-zinc-500 bg-zinc-900 text-amber-400 focus:ring-2 focus:ring-amber-400/30 focus:ring-offset-0"
                 />
 
                 <div
@@ -67,12 +67,12 @@ export default function TaskItem({ task, onToggle, onDelete }: ITaskItemProps) {
                     onClick={() => hasDescription && setIsExpanded(!isExpanded)}
                 >
                     <div className="flex items-center gap-2">
-                        <span className={`text-sm ${task.isDone ? "text-neutral-400 line-through" : ""}`}>
+                        <span className={`text-sm ${task.isDone ? "text-neutral-500 line-through" : ""}`}>
                             {categoryConfig?.icon} {task.title}
                         </span>
                         {hasDescription && (
                             <svg
-                                className={`h-3 w-3 shrink-0 text-neutral-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                                className={`h-3 w-3 shrink-0 text-zinc-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -84,7 +84,7 @@ export default function TaskItem({ task, onToggle, onDelete }: ITaskItemProps) {
 
                     {/* Description - clickable to expand */}
                     {hasDescription && (
-                        <p className={`mt-1 text-xs text-neutral-500 ${
+                        <p className={`mt-1 text-xs text-neutral-400 ${
                             !isExpanded && isLongDescription ? 'truncate' : ''
                         }`}>
                             {task.description}
@@ -95,7 +95,7 @@ export default function TaskItem({ task, onToggle, onDelete }: ITaskItemProps) {
                 {/* Delete button */}
                 <button
                     onClick={() => onDelete(task.id)}
-                    className="shrink-0 rounded p-1 text-neutral-300 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-200 group-hover:opacity-100"
+                    className="shrink-0 rounded p-1 text-zinc-600 opacity-0 transition-all hover:bg-red-950/50 hover:text-red-400 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-400/30 group-hover:opacity-100"
                     aria-label="Delete task"
                 >
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

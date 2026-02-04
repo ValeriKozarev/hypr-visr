@@ -65,11 +65,11 @@ export default function ToDoList() {
             {/* Active Tasks */}
             <section>
                 <div className="mb-3 flex items-center gap-2">
-                    <h2 className="text-xs font-medium uppercase tracking-wider text-neutral-200">
+                    <h2 className="text-xs font-medium uppercase tracking-wider text-amber-400/80">
                         Tasks
                     </h2>
                     {activeTasks.length > 0 && (
-                        <span className="text-xs text-neutral-200">
+                        <span className="text-xs text-neutral-500">
                             ({activeTasks.length})
                         </span>
                     )}
@@ -89,12 +89,11 @@ export default function ToDoList() {
                     </SortableContext>
                 </DndContext>
                 {activeTasks.length === 0 && (
-                    <div className="border rounded-md border-neutral-400">
-                        <p className="py-8 text-center text-sm text-neutral-200">
+                    <div className="rounded border border-zinc-700 bg-zinc-800/50">
+                        <p className="py-8 text-center text-sm text-neutral-500">
                             No tasks yet. Add one above to get started.
                         </p>
                     </div>
-
                 )}
             </section>
 
@@ -102,7 +101,7 @@ export default function ToDoList() {
             {completedTasks.length > 0 && (
                 <section>
                     <div className="mb-3 flex items-center gap-2">
-                        <h2 className="text-xs font-medium uppercase tracking-wider text-neutral-400">
+                        <h2 className="text-xs font-medium uppercase tracking-wider text-neutral-500">
                             Completed
                         </h2>
                     </div>

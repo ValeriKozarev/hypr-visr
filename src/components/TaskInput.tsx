@@ -29,10 +29,10 @@ export default function TaskInput({ onAdd }: ITaskInputProps) {
     }
 
     return (
-        <div className="rounded-md bg-zinc-500 p-4 shadow-sm ring-1 ring-neutral-400">
+        <div className="rounded bg-zinc-800 p-4 shadow-lg ring-1 ring-zinc-700">
             <div className="flex gap-2">
                 <input
-                    className="flex-1 rounded border border-neutral-400 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-800 placeholder-neutral-400 transition-colors focus:border-neutral-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-200"
+                    className="flex-1 rounded border border-zinc-600 bg-zinc-900 px-4 py-2.5 text-sm text-neutral-100 placeholder-neutral-500 transition-colors focus:border-amber-400/50 focus:outline-none focus:ring-2 focus:ring-amber-400/20"
                     type="text"
                     placeholder="Add a new task..."
                     value={title}
@@ -41,7 +41,7 @@ export default function TaskInput({ onAdd }: ITaskInputProps) {
                     onFocus={() => setShowDetails(true)}
                 />
                 <button
-                    className="rounded-lg bg-amber-400 px-4 py-2.5 text-sm font-medium text-neutral-800 shadow-sm transition-colors hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 disabled:opacity-50"
+                    className="rounded bg-amber-400 px-4 py-2.5 text-sm font-medium text-zinc-900 shadow-[0_0_10px_rgba(251,191,36,0.3)] transition-all hover:bg-amber-300 hover:shadow-[0_0_15px_rgba(251,191,36,0.5)] focus:outline-none focus:ring-2 focus:ring-amber-400/50 disabled:opacity-50 disabled:shadow-none"
                     onClick={addTask}
                     disabled={!title.trim()}
                 >
@@ -53,26 +53,26 @@ export default function TaskInput({ onAdd }: ITaskInputProps) {
                 <div className="mt-3 space-y-3">
                     <div className="mb-0">
                         <textarea
-                            className="w-full resize-none rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-800 placeholder-neutral-400 transition-colors focus:border-neutral-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-200"
+                            className="w-full resize-none rounded border border-zinc-600 bg-zinc-900 px-4 py-2.5 text-sm text-neutral-100 placeholder-neutral-500 transition-colors focus:border-amber-400/50 focus:outline-none focus:ring-2 focus:ring-amber-400/20"
                             placeholder="Add a description (optional)..."
                             rows={2}
                             maxLength={250}
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                         />
-                        <div className="mt-1 text-right text-xs text-neutral-200">
+                        <div className="mt-1 text-right text-xs text-neutral-500">
                             {description.length}/250
                         </div>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-xs text-neutral-200">Category:</span>
+                        <span className="text-xs text-neutral-400">Category:</span>
                         <button
                             onClick={() => setCategory(undefined)}
                             className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                                 category === undefined
-                                    ? 'bg-neutral-200 text-neutral-700'
-                                    : 'bg-neutral-100 text-neutral-500 hover:bg-neutral-200'
+                                    ? 'bg-zinc-600 text-neutral-200 ring-1 ring-zinc-500'
+                                    : 'bg-zinc-700 text-neutral-400 hover:bg-zinc-600'
                             }`}
                         >
                             None
@@ -83,8 +83,8 @@ export default function TaskInput({ onAdd }: ITaskInputProps) {
                                 onClick={() => setCategory(cat.id)}
                                 className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                                     category === cat.id
-                                        ? `${cat.bgColor} ${cat.color} ${cat.borderColor}`
-                                        : 'border-transparent bg-neutral-100 text-neutral-500 hover:bg-neutral-200'
+                                        ? `bg-zinc-800 ${cat.color} ${cat.borderColor}`
+                                        : 'border-zinc-600 bg-zinc-700 text-neutral-400 hover:bg-zinc-600'
                                 }`}
                             >
                                 {cat.icon} {cat.label}

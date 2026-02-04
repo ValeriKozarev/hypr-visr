@@ -10,28 +10,29 @@ export type Category = {
 }
 
 export const CATEGORIES: Category[] = [
-    { 
-        id: 'personal', 
+    {
+        id: 'personal',
         icon: '\u{1f486}\u{200d}\u{2642}\u{fe0f}',
-        label: 'Personal', 
-        color: 'text-green-700', 
-        bgColor: 'bg-green-50', 
-        borderColor: 'border-green-200' 
+        label: 'Personal',
+        color: 'text-green-400',
+        bgColor: 'bg-green-950/30',
+        borderColor: 'border-green-500/50'
     },
-    { 
-        id: 'tech', 
+    {
+        id: 'tech',
         icon: '\u{1f4bb}',
-        label: 'Tech', 
-        color: 'text-blue-700', 
-        bgColor: 'bg-blue-50', 
-        borderColor: 'border-blue-200' },
-    { 
-        id: 'gearhead', 
+        label: 'Tech',
+        color: 'text-blue-400',
+        bgColor: 'bg-blue-950/30',
+        borderColor: 'border-blue-500/50'
+    },
+    {
+        id: 'gearhead',
         icon: '\u{1f6e0}',
-        label: 'Gearhead', 
-        color: 'text-orange-700', 
-        bgColor: 'bg-orange-50', 
-        borderColor: 'border-orange-200' 
+        label: 'Gearhead',
+        color: 'text-orange-400',
+        bgColor: 'bg-orange-950/30',
+        borderColor: 'border-orange-500/50'
     },
 ];
 
