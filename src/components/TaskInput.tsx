@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { CATEGORIES, Category } from '../types';
+import { CATEGORIES, CategoryEnum } from '../types';
 
 interface ITaskInputProps {
-    onAdd: (title: string, description?: string, category?: Category) => void;
+    onAdd: (title: string, description?: string, category?: CategoryEnum) => void;
 }
 
 export default function TaskInput({ onAdd }: ITaskInputProps) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [category, setCategory] = useState<Category | undefined>(undefined);
+    const [category, setCategory] = useState<CategoryEnum | undefined>(undefined);
     const [showDetails, setShowDetails] = useState(false);
 
     function addTask() {
@@ -29,11 +29,10 @@ export default function TaskInput({ onAdd }: ITaskInputProps) {
     }
 
     return (
-        <div className="rounded-xl bg-white p-4 shadow-sm ring-1 ring-neutral-100">
-            {/* Title input row */}
+        <div className="rounded-md bg-zinc-500 p-4 shadow-sm ring-1 ring-neutral-400">
             <div className="flex gap-2">
                 <input
-                    className="flex-1 rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-800 placeholder-neutral-400 transition-colors focus:border-neutral-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-200"
+                    className="flex-1 rounded border border-neutral-400 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-800 placeholder-neutral-400 transition-colors focus:border-neutral-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-200"
                     type="text"
                     placeholder="Add a new task..."
                     value={title}
@@ -42,7 +41,7 @@ export default function TaskInput({ onAdd }: ITaskInputProps) {
                     onFocus={() => setShowDetails(true)}
                 />
                 <button
-                    className="rounded-lg bg-neutral-800 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 disabled:opacity-50"
+                    className="rounded-lg bg-amber-400 px-4 py-2.5 text-sm font-medium text-neutral-800 shadow-sm transition-colors hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 disabled:opacity-50"
                     onClick={addTask}
                     disabled={!title.trim()}
                 >
@@ -50,11 +49,9 @@ export default function TaskInput({ onAdd }: ITaskInputProps) {
                 </button>
             </div>
 
-            {/* Expandable details section */}
             {showDetails && (
                 <div className="mt-3 space-y-3">
-                    {/* Description */}
-                    <div>
+                    <div className="mb-0">
                         <textarea
                             className="w-full resize-none rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-800 placeholder-neutral-400 transition-colors focus:border-neutral-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-200"
                             placeholder="Add a description (optional)..."
@@ -63,14 +60,13 @@ export default function TaskInput({ onAdd }: ITaskInputProps) {
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                         />
-                        <div className="mt-1 text-right text-xs text-neutral-400">
+                        <div className="mt-1 text-right text-xs text-neutral-200">
                             {description.length}/250
                         </div>
                     </div>
 
-                    {/* Category selection */}
                     <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-xs text-neutral-500">Category:</span>
+                        <span className="text-xs text-neutral-200">Category:</span>
                         <button
                             onClick={() => setCategory(undefined)}
                             className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
@@ -91,7 +87,7 @@ export default function TaskInput({ onAdd }: ITaskInputProps) {
                                         : 'border-transparent bg-neutral-100 text-neutral-500 hover:bg-neutral-200'
                                 }`}
                             >
-                                {cat.label}
+                                {cat.icon} {cat.label}
                             </button>
                         ))}
                     </div>

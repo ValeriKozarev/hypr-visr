@@ -1,9 +1,38 @@
-export type Category = 'personal' | 'tech' | 'vehicle';
+export type CategoryEnum = 'personal' | 'tech' | 'gearhead';
 
-export const CATEGORIES: { id: Category; label: string; color: string; bgColor: string; borderColor: string }[] = [
-    { id: 'personal', label: 'Personal', color: 'text-green-700', bgColor: 'bg-green-50', borderColor: 'border-green-200' },
-    { id: 'tech', label: 'Tech', color: 'text-blue-700', bgColor: 'bg-blue-50', borderColor: 'border-blue-200' },
-    { id: 'vehicle', label: 'Vehicle', color: 'text-orange-700', bgColor: 'bg-orange-50', borderColor: 'border-orange-200' },
+export type Category = {
+    id: CategoryEnum,
+    icon: string,
+    label: string,
+    color: string,
+    bgColor: string,
+    borderColor: string
+}
+
+export const CATEGORIES: Category[] = [
+    { 
+        id: 'personal', 
+        icon: '\u{1f486}\u{200d}\u{2642}\u{fe0f}',
+        label: 'Personal', 
+        color: 'text-green-700', 
+        bgColor: 'bg-green-50', 
+        borderColor: 'border-green-200' 
+    },
+    { 
+        id: 'tech', 
+        icon: '\u{1f4bb}',
+        label: 'Tech', 
+        color: 'text-blue-700', 
+        bgColor: 'bg-blue-50', 
+        borderColor: 'border-blue-200' },
+    { 
+        id: 'gearhead', 
+        icon: '\u{1f6e0}',
+        label: 'Gearhead', 
+        color: 'text-orange-700', 
+        bgColor: 'bg-orange-50', 
+        borderColor: 'border-orange-200' 
+    },
 ];
 
 export type Task = {
@@ -11,5 +40,5 @@ export type Task = {
     title: string;
     isDone: boolean;
     description?: string;
-    category?: Category;
+    category?: CategoryEnum;
 }
