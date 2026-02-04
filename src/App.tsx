@@ -1,4 +1,5 @@
 import ToDoList from "./components/ToDoList";
+import { pickSubtitle } from "./utils/subtitle";
 import "./App.css";
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
               className="h-14 w-14 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]"
             />
           </div>
-          <p className="mt-2 text-sm text-amber-400/70">Let's get this shit.</p>
+          <p className="mt-2 text-sm text-amber-400/70">{pickSubtitle()}</p>
         </header>
         <ToDoList />
       </div>
