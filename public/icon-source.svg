@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+	 width="512" height="512" viewBox="90 100 450 450">
+<g id="Layer_2">
+	<path fill="#221E1F" d="M139.502,177.667v276.667c0,0-8,42.668,34.667,45.334h287.333c0,0,38.666,3.334,35.333-46V179
+		c0,0-1.999-34.667-47.333-34H182.836C182.836,145,142.835,147.667,139.502,177.667z"/>
+</g>
+<g id="Layer_3">
+	<ellipse fill="#FFFFFF" cx="318.169" cy="324" rx="153.333" ry="151"/>
+</g>
+<g id="Layer_4">
+	<ellipse fill="#5E7E4D" cx="317.836" cy="324.334" rx="141.667" ry="138.666"/>
+</g>
+<g id="Layer_5">
+	<ellipse fill="#FFFFFF" cx="254.836" cy="323.666" rx="42" ry="40.667"/>
+	<ellipse fill="#FFFFFF" cx="375.502" cy="323.667" rx="42" ry="40.667"/>
+</g>
+</svg>
