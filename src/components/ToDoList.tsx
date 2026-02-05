@@ -1,12 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import TaskItem from "./TaskItem";
 import TaskInput from "./TaskInput";
 import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
 import { Task, CategoryEnum } from '../types';
+import { invoke } from '@tauri-apps/api/core';
 
 export default function ToDoList() {
+    const hasLoaded = useRef(false);
+    
     const [taskList, setTaskList] = useState<Task[]>([]);
+
+    useEffect(() => {
+        invoke<Task[]>('load_tasks').then((tasks) => {
+            setTaskList(tasks);
+            hasLoaded.current = true;  // Mark as loaded to avoid race condition
+        });
+    }, []);
+
+    // Save tasks when they change (but not before initial load)
+    useEffect(() => {
+        if (hasLoaded.current) {
+            invoke('save_tasks', { tasks: taskList });
+        }
+    }, [taskList]);
 
     function removeTaskFromList(id: number) {
         setTaskList(taskList.filter((task) => task.id !== id));
