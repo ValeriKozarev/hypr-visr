@@ -1,3 +1,4 @@
+import { useState } from "react";
 import ListInput from "./ListInput";
 
 import type { ToDoList } from "../types";
@@ -11,16 +12,13 @@ interface IListManagerProps {
     onRenameList: (id: number, name: string) => void;
 }
 
-export default function ListManager({lists, selectedListId, onListSelect, onAddList, onDeleteList}: IListManagerProps) {
+export default function ListManager({lists, selectedListId, onListSelect, onAddList, onDeleteList, onRenameList}: IListManagerProps) {
+    const [editingListId, setEditingListId] = useState<number | null>(null);
+
     return (
-        <nav className="flex h-full flex-col">
-            <h2 className="mb-4 text-xs font-medium uppercase tracking-wider text-amber-400/80">
-                Lists
-            </h2>
-
-            <ListInput onAddList={onAddList}/>
-
-            <ul className="mt-4 flex-1 space-y-1">
+        <section>
+            <ListInput onAddList={onAddList} />
+            <ul className="mt-4 space-y-2">
                 {lists.map(list => (
                     <li
                         key={list.id}
@@ -31,28 +29,64 @@ export default function ListManager({lists, selectedListId, onListSelect, onAddL
                         }`}
                         onClick={() => onListSelect(list.id)}
                     >
-                        <span className="truncate">{list.name}</span>
-                        <button
-                            className="shrink-0 rounded p-1 text-zinc-600 opacity-0 transition-all hover:bg-red-950/50 hover:text-red-400 group-hover:opacity-100"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onDeleteList(list.id);
-                            }}
-                            aria-label="Delete list"
-                        >
-                            <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
+                        {editingListId === list.id ? (
+                            <input
+                                autoFocus
+                                defaultValue={list.name}
+                                className="flex-1 bg-zinc-800 rounded px-2 py-1 text-neutral-100 text-sm focus:outline-none focus:ring-1 focus:ring-amber-400/50"
+                                onClick={(e) => e.stopPropagation()}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        onRenameList(list.id, e.currentTarget.value.trim());
+                                        setEditingListId(null);
+                                    }
+                                    if (e.key === 'Escape') {
+                                        setEditingListId(null);
+                                    }
+                                }}
+                                onBlur={(e) => {
+                                    onRenameList(list.id, e.target.value.trim());
+                                    setEditingListId(null);
+                                }}
+                            />
+                        ) : (
+                            <span className="truncate">{list.name}</span>
+                        )}
+
+                        {editingListId !== list.id && (
+                            <div className="flex shrink-0 items-center gap-1">
+                                {/* Edit button */}
+                                <button
+                                    className="shrink-0 rounded p-1 text-zinc-600 opacity-0 transition-all hover:bg-zinc-700 hover:text-amber-400 group-hover:opacity-100"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setEditingListId(list.id);
+                                    }}
+                                    aria-label="Rename list"
+                                >
+                                    <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                    </svg>
+                                </button>
+
+                                {/* Delete button */}
+                                <button
+                                    className="shrink-0 rounded p-1 text-zinc-600 opacity-0 transition-all hover:bg-red-950/50 hover:text-red-400 group-hover:opacity-100"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onDeleteList(list.id);
+                                    }}
+                                    aria-label="Delete list"
+                                >
+                                    <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        )}
                     </li>
                 ))}
             </ul>
-
-            {lists.length === 0 && (
-                <p className="mt-4 text-center text-xs text-neutral-600">
-                    No lists yet
-                </p>
-            )}
-        </nav>
+        </section>
     )
 }
