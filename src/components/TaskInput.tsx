@@ -1,19 +1,28 @@
 import { useState } from 'react';
-import { CATEGORIES, CategoryEnum } from '../types';
+import { CATEGORIES } from '../types';
+import type { CategoryEnum, Task } from '../types';
 
 interface ITaskInputProps {
-    onAdd: (title: string, description?: string, category?: CategoryEnum) => void;
-}
+      // For add mode
+      onAdd?: (title: string, description?: string, category?: CategoryEnum) => void;
 
-export default function TaskInput({ onAdd }: ITaskInputProps) {
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [category, setCategory] = useState<CategoryEnum | undefined>(undefined);
-    const [showDetails, setShowDetails] = useState(false);
+      // For edit mode
+      initialTask?: Task;
+      onSave?: (updates: Partial<Task>) => void;
+      onCancel?: () => void;}
+
+export default function TaskInput({ onAdd, initialTask, onSave, onCancel }: ITaskInputProps) {
+    const isEditMode = !!initialTask
+
+    const [title, setTitle] = useState(initialTask ? initialTask.title : '');
+    const [description, setDescription] = useState(initialTask ? initialTask.description || '' : '');
+    const [category, setCategory] = useState<CategoryEnum | undefined>(initialTask?.category);
+    const [showDetails, setShowDetails] = useState(isEditMode ? true : false);
+
 
     function addTask() {
         if (title.trim()) {
-            onAdd(title, description || undefined, category);
+            onAdd && onAdd(title, description || undefined, category);
             setTitle('');
             setDescription('');
             setCategory(undefined);
@@ -24,7 +33,11 @@ export default function TaskInput({ onAdd }: ITaskInputProps) {
     function handleKeyDown(e: React.KeyboardEvent) {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            addTask();
+            if (isEditMode) {
+                onSave && onSave({ title, description, category });
+            } else {
+                addTask();
+            }
         }
     }
 
@@ -42,10 +55,10 @@ export default function TaskInput({ onAdd }: ITaskInputProps) {
                 />
                 <button
                     className="rounded bg-amber-400 px-4 py-2.5 text-sm font-medium text-zinc-900 shadow-[0_0_10px_rgba(251,191,36,0.3)] transition-all hover:bg-amber-300 hover:shadow-[0_0_15px_rgba(251,191,36,0.5)] focus:outline-none focus:ring-2 focus:ring-amber-400/50 disabled:opacity-50 disabled:shadow-none"
-                    onClick={addTask}
+                    onClick={isEditMode ? () => onSave && onSave({ title, description, category }) : addTask}
                     disabled={!title.trim()}
                 >
-                    Add
+                    {isEditMode ? 'Update' : 'Add'}
                 </button>
             </div>
 
@@ -95,10 +108,14 @@ export default function TaskInput({ onAdd }: ITaskInputProps) {
 
                         <button
                             onClick={() => {
-                                setShowDetails(false);
-                                setTitle('');
-                                setDescription('');
-                                setCategory(undefined);
+                                if (onCancel) {
+                                    onCancel();
+                                } else {
+                                    setShowDetails(false);
+                                    setTitle('');
+                                    setDescription('');
+                                    setCategory(undefined);
+                                }
                             }}
                             className="rounded px-3 py-1.5 text-xs text-neutral-400 transition-colors hover:bg-red-950/50 hover:text-red-400 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-400/30 group-hover:opacity-100"
                         >
