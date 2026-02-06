@@ -51,45 +51,59 @@ export default function TaskInput({ onAdd }: ITaskInputProps) {
 
             {showDetails && (
                 <div className="mt-3 space-y-3">
-                    <div className="mb-0">
+                    <div className="relative">
                         <textarea
-                            className="w-full resize-none rounded border border-zinc-600 bg-zinc-900 px-4 py-2.5 text-sm text-neutral-100 placeholder-neutral-500 transition-colors focus:border-amber-400/50 focus:outline-none focus:ring-2 focus:ring-amber-400/20"
+                            className="w-full resize-none rounded border border-zinc-600 bg-zinc-900 px-4 py-2.5 pb-6 text-sm text-neutral-100 placeholder-neutral-500 transition-colors focus:border-amber-400/50 focus:outline-none focus:ring-2 focus:ring-amber-400/20"
                             placeholder="Add a description (optional)..."
                             rows={2}
                             maxLength={250}
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                         />
-                        <div className="mt-1 text-right text-xs text-neutral-500">
+                        <span className="absolute bottom-2.5 right-3 text-xs text-neutral-500">
                             {description.length}/250
-                        </div>
+                        </span>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-xs text-neutral-400">Category:</span>
-                        <button
-                            onClick={() => setCategory(undefined)}
-                            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                                category === undefined
-                                    ? 'bg-zinc-600 text-neutral-200 ring-1 ring-zinc-500'
-                                    : 'bg-zinc-700 text-neutral-400 hover:bg-zinc-600'
-                            }`}
-                        >
-                            None
-                        </button>
-                        {CATEGORIES.map((cat) => (
+                    <div className="flex items-center justify-between gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-xs text-neutral-400">Category:</span>
                             <button
-                                key={cat.id}
-                                onClick={() => setCategory(cat.id)}
-                                className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
-                                    category === cat.id
-                                        ? `bg-zinc-800 ${cat.color} ${cat.borderColor}`
-                                        : 'border-zinc-600 bg-zinc-700 text-neutral-400 hover:bg-zinc-600'
+                                onClick={() => setCategory(undefined)}
+                                className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                                    category === undefined
+                                        ? 'bg-zinc-600 text-neutral-200 ring-1 ring-zinc-500'
+                                        : 'bg-zinc-700 text-neutral-400 hover:bg-zinc-600'
                                 }`}
                             >
-                                {cat.icon} {cat.label}
+                                None
                             </button>
-                        ))}
+                            {CATEGORIES.map((cat) => (
+                                <button
+                                    key={cat.id}
+                                    onClick={() => setCategory(cat.id)}
+                                    className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+                                        category === cat.id
+                                            ? `bg-zinc-800 ${cat.color} ${cat.borderColor}`
+                                            : 'border-zinc-600 bg-zinc-700 text-neutral-400 hover:bg-zinc-600'
+                                    }`}
+                                >
+                                    {cat.icon} {cat.label}
+                                </button>
+                            ))}
+                        </div>
+
+                        <button
+                            onClick={() => {
+                                setShowDetails(false);
+                                setTitle('');
+                                setDescription('');
+                                setCategory(undefined);
+                            }}
+                            className="rounded px-3 py-1.5 text-xs text-neutral-400 transition-colors hover:bg-red-950/50 hover:text-red-400 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-400/30 group-hover:opacity-100"
+                        >
+                            Cancel
+                        </button>
                     </div>
                 </div>
             )}

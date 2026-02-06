@@ -3,15 +3,16 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Task, CATEGORIES } from '../types';
 
-// data down, actions up: a task needs to be able to propagate actions back up to the list for the state to change correctly
 interface ITaskItemProps {
     task: Task;
+    onEdit: (id: number, updates: Partial<Task>) => void;
     onToggle: (id: number) => void;
     onDelete: (id: number) => void;
 }
 
-export default function TaskItem({ task, onToggle, onDelete }: ITaskItemProps) {
+export default function TaskItem({ task, onEdit, onToggle, onDelete }: ITaskItemProps) {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: task.id });
 
@@ -92,7 +93,17 @@ export default function TaskItem({ task, onToggle, onDelete }: ITaskItemProps) {
                     )}
                 </div>
 
-                {/* Delete button */}
+                {/* buttons */}
+                <button
+                    onClick={() => setIsEditing(true)}
+                    className="shrink-0 rounded p-1 text-zinc-600 opacity-0 transition-all hover:bg-zinc-700 hover:text-amber-400 group-hover:opacity-100"                    
+                    aria-label="Edit task"
+                >
+                    <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </button>
+
                 <button
                     onClick={() => onDelete(task.id)}
                     className="shrink-0 rounded p-1 text-zinc-600 opacity-0 transition-all hover:bg-red-950/50 hover:text-red-400 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-400/30 group-hover:opacity-100"

@@ -55,6 +55,19 @@ function App() {
                 : list
         ));
     }
+
+    function editTask(id: number, updates: Partial<Task>) {
+        setAllToDoLists(lists => lists.map(list => {
+            if (list.id !== selectedListId) return list;
+
+            return {
+                ...list,
+                tasks: list.tasks.map(task => {
+                    return task.id === id ? { ...task, ...updates } : task
+                })
+            }
+        }));
+    }
     
     function toggleTask(id: number) {
         setAllToDoLists(lists => lists.map(list => {
@@ -145,6 +158,7 @@ function App() {
                         <ToDoList
                             list={selectedList}
                             onRemoveTask={removeTaskFromList}
+                            onEditTask={editTask}
                             onAddTask={addTaskToList}
                             onToggleTask={toggleTask}
                             onDragTask={handleDragEnd}

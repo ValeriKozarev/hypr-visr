@@ -2,17 +2,19 @@ import TaskItem from "./TaskItem";
 import TaskInput from "./TaskInput";
 import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { CategoryEnum, ToDoList as ToDoListType} from '../types';
+
+import type { CategoryEnum, ToDoList as ToDoListType, Task } from '../types';
 
 interface IToDoListProps {
     list: ToDoListType;
     onRemoveTask: (id: number) => void;
+    onEditTask: (id: number, updates: Partial<Task>) => void;
     onAddTask: (title: string, description?: string, category?: CategoryEnum) => void;
     onToggleTask: (id: number) => void;
     onDragTask: (event: DragEndEvent) => void;
 }
 
-export default function ToDoList({ list, onRemoveTask, onAddTask, onToggleTask, onDragTask }: IToDoListProps) {    
+export default function ToDoList({ list, onRemoveTask, onEditTask, onAddTask, onToggleTask, onDragTask }: IToDoListProps) {    
     const activeTasks = list.tasks.filter(t => !t.isDone);
     const completedTasks = list.tasks.filter(t => t.isDone);
 
@@ -39,6 +41,7 @@ export default function ToDoList({ list, onRemoveTask, onAddTask, onToggleTask, 
                                 <TaskItem
                                     key={task.id}
                                     task={task}
+                                    onEdit={onEditTask}
                                     onToggle={onToggleTask}
                                     onDelete={onRemoveTask}
                                 />
@@ -68,6 +71,7 @@ export default function ToDoList({ list, onRemoveTask, onAddTask, onToggleTask, 
                             <TaskItem
                                 key={task.id}
                                 task={task}
+                                onEdit={onEditTask}
                                 onToggle={onToggleTask}
                                 onDelete={onRemoveTask}
                             />
