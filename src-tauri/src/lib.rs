@@ -12,7 +12,14 @@ struct Task {
     category: Option<String>,
 }
 
-fn get_tasks_path() -> PathBuf {
+#[derive(Serialize, Deserialize)]
+struct ToDoList {
+    id: u64,
+    name: String,
+    tasks: Vec<Task>,
+}
+
+fn get_data_path() -> PathBuf {
     let home = std::env::var("HOME").expect("HOME not set");
     let dir = PathBuf::from(home).join(".hypr-visr");
 
@@ -23,8 +30,8 @@ fn get_tasks_path() -> PathBuf {
 }
 
 #[tauri::command]
-fn load_tasks() -> Vec<Task> {
-    let path = get_tasks_path();
+fn load_lists() -> Vec<ToDoList> {
+    let path = get_data_path();
 
     // If file doesn't exist, return empty vec
     if !path.exists() {
@@ -37,9 +44,9 @@ fn load_tasks() -> Vec<Task> {
 }
 
 #[tauri::command]
-fn save_tasks(tasks: Vec<Task>) {
-    let path = get_tasks_path();
-    let json = serde_json::to_string_pretty(&tasks).expect("Failed to serialize");
+fn save_lists(lists: Vec<ToDoList>) {
+    let path = get_data_path();
+    let json = serde_json::to_string_pretty(&lists).expect("Failed to serialize");
     fs::write(&path, json).expect("Failed to write file");
 }
 
@@ -47,7 +54,7 @@ fn save_tasks(tasks: Vec<Task>) {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![load_tasks, save_tasks])        
+        .invoke_handler(tauri::generate_handler![load_lists, save_lists])        
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

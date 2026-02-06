@@ -35,21 +35,19 @@ function App() {
     // computed the list thats selected so it plays nice with React
     const selectedList = allToDoLists.find(list => list.id === selectedListId);
 
-    // // TODO: this needs to instead load all the lists
-    // useEffect(() => {
-    //     invoke<Task[]>('load_tasks').then((tasks) => {
-    //         setTaskList(tasks);
-    //         hasLoaded.current = true;  // Mark as loaded to avoid race condition
-    //     });
-    // }, []);
+    useEffect(() => {
+        invoke<ToDoListType[]>('load_lists').then((lists) => {
+            setAllToDoLists(lists);
+            hasLoaded.current = true;  // Mark as loaded to avoid race condition
+        });
+    }, []);
 
-    // // TODO: this needs to be able to instead save all the lists (and probably we need one to save just a specific list)
-    // // Save tasks when they change (but not before initial load)
-    // useEffect(() => {
-    //     if (hasLoaded.current) {
-    //         invoke('save_tasks', { tasks: taskList });
-    //     }
-    // }, [taskList]);
+    // Save when anything changes (but not before initial load)
+    useEffect(() => {
+        if (hasLoaded.current) {
+            invoke('save_lists', { lists: allToDoLists });
+        }
+    }, [allToDoLists]);
 
     //#region Task operations
     function removeTaskFromList(id: number) {
