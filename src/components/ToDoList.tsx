@@ -1,83 +1,24 @@
-import { useState, useEffect, useRef } from "react";
 import TaskItem from "./TaskItem";
 import TaskInput from "./TaskInput";
 import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
-import { Task, CategoryEnum } from '../types';
-import { invoke } from '@tauri-apps/api/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CategoryEnum, ToDoList as ToDoListType} from '../types';
 
-export default function ToDoList() {
-    const hasLoaded = useRef(false);
-    
-    const [taskList, setTaskList] = useState<Task[]>([]);
+interface IToDoListProps {
+    list: ToDoListType;
+    onRemoveTask: (id: number) => void;
+    onAddTask: (title: string, description?: string, category?: CategoryEnum) => void;
+    onToggleTask: (id: number) => void;
+    onDragTask: (event: DragEndEvent) => void;
+}
 
-    useEffect(() => {
-        invoke<Task[]>('load_tasks').then((tasks) => {
-            setTaskList(tasks);
-            hasLoaded.current = true;  // Mark as loaded to avoid race condition
-        });
-    }, []);
-
-    // Save tasks when they change (but not before initial load)
-    useEffect(() => {
-        if (hasLoaded.current) {
-            invoke('save_tasks', { tasks: taskList });
-        }
-    }, [taskList]);
-
-    function removeTaskFromList(id: number) {
-        setTaskList(taskList.filter((task) => task.id !== id));
-    }
-
-    function addTaskToList(title: string, description?: string, category?: CategoryEnum) {
-        const newTask: Task = {
-            id: Date.now(),
-            title,
-            isDone: false,
-            description,
-            category
-        };
-        setTaskList([newTask, ...taskList]);
-    }
-
-    function toggleTask(id: number) {
-        const task = taskList.find(t => t.id === id);
-        if (!task) return;
-
-        const isNowDone = !task.isDone;
-        const updatedTask = { ...task, isDone: isNowDone };
-        const otherTasks = taskList.filter(t => t.id !== id);
-
-        const active = otherTasks.filter(t => !t.isDone);
-        const completed = otherTasks.filter(t => t.isDone);
-
-        if (isNowDone) {
-            setTaskList([...active, updatedTask, ...completed]);
-        } else {
-            setTaskList([updatedTask, ...active, ...completed]);
-        }
-    }
-
-    const activeTasks = taskList.filter(t => !t.isDone);
-    const completedTasks = taskList.filter(t => t.isDone);
-
-    function handleDragEnd(event: DragEndEvent) {
-        const { active, over } = event;
-
-        if (!over || active.id === over.id) {
-            return;
-        }
-
-        const oldIndex = activeTasks.findIndex(t => t.id === active.id);
-        const newIndex = activeTasks.findIndex(t => t.id === over.id);
-
-        const reorderedActive = arrayMove(activeTasks, oldIndex, newIndex);
-        setTaskList([...reorderedActive, ...completedTasks]);
-    }
+export default function ToDoList({ list, onRemoveTask, onAddTask, onToggleTask, onDragTask }: IToDoListProps) {    
+    const activeTasks = list.tasks.filter(t => !t.isDone);
+    const completedTasks = list.tasks.filter(t => t.isDone);
 
     return (
         <div className="space-y-6">
-            <TaskInput onAdd={addTaskToList} />    
+            <TaskInput onAdd={onAddTask} />    
 
             {/* Active Tasks */}
             <section>
@@ -91,15 +32,15 @@ export default function ToDoList() {
                         </span>
                     )}
                 </div>
-                <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <DndContext collisionDetection={closestCenter} onDragEnd={onDragTask}>
                     <SortableContext items={activeTasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
                         <ul className="space-y-2">
                             {activeTasks.map(task => (
                                 <TaskItem
                                     key={task.id}
                                     task={task}
-                                    onToggle={toggleTask}
-                                    onDelete={removeTaskFromList}
+                                    onToggle={onToggleTask}
+                                    onDelete={onRemoveTask}
                                 />
                             ))}
                         </ul>
@@ -127,8 +68,8 @@ export default function ToDoList() {
                             <TaskItem
                                 key={task.id}
                                 task={task}
-                                onToggle={toggleTask}
-                                onDelete={removeTaskFromList}
+                                onToggle={onToggleTask}
+                                onDelete={onRemoveTask}
                             />
                         ))}
                     </ul>

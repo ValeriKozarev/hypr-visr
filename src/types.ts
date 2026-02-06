@@ -43,3 +43,9 @@ export type Task = {
     description?: string;
     category?: CategoryEnum;
 }
+
+export type ToDoList = {
+    id: number;
+    name: string;
+    tasks: Task[];
+}
