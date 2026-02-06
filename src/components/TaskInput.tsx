@@ -42,7 +42,16 @@ export default function TaskInput({ onAdd, initialTask, onSave, onCancel }: ITas
     }
 
     return (
-        <div className="rounded bg-zinc-800 p-4 shadow-lg ring-1 ring-zinc-700">
+        <div className={`rounded p-4 shadow-lg ${
+            isEditMode
+                ? 'bg-zinc-800 ring-2 ring-amber-400/50'
+                : 'bg-zinc-800 ring-1 ring-zinc-700'
+        }`}>
+            {isEditMode && (
+                <div className="mb-3 text-xs font-medium uppercase tracking-wider text-amber-400/80">
+                    Editing Task
+                </div>
+            )}
             <div className="flex gap-2">
                 <input
                     className="flex-1 rounded border border-zinc-600 bg-zinc-900 px-4 py-2.5 text-sm text-neutral-100 placeholder-neutral-500 transition-colors focus:border-amber-400/50 focus:outline-none focus:ring-2 focus:ring-amber-400/20"
