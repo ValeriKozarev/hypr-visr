@@ -7,9 +7,10 @@ A local-first todo/task management desktop app built with Tauri and React.
 - Task creation (categories, descriptions, etc)
 - Drag-and-drop reordering
 - Local data persistence
-- TODO: multiple list support
-- TODO: loading screen/splash screen
 - TODO: task editing
+- TODO: task filtering/searching
+- TODO: list renaming
+- TODO: loading screen/splash screen
 
 ## Tech Stack
 

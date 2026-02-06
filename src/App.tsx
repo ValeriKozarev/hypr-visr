@@ -10,23 +10,6 @@ import "./App.css";
 import type { Task, ToDoList as ToDoListType, CategoryEnum } from "./types";
 
 function App() {
-    // Yes, App should own both the lists array AND selectedListId. This follows "data down, actions up" - App is the single source of truth for all data.
-
-    // The tricky part: right now ToDoList owns its own task state and persistence. With multiple lists, that needs to move up to App. ToDoList becomes more of a "presentational"
-    // component that receives data and callbacks.
-
-    // Component hierarchy:
-
-    // App (owns: lists, selectedListId, all CRUD functions, persistence)
-    // ├── Library (receives: lists, selectedListId, onSelect, onAdd, onDelete, onRename)
-    // └── ToDoList (receives: tasks, onAddTask, onToggleTask, onDeleteTask, onReorder)
-
-    // The refactor:
-
-    // 1. Move taskList state from ToDoList up to App (as part of lists)
-    // 2. Move persistence logic (load/save) to App
-    // 3. ToDoList receives tasks as a prop instead of owning state
-    // 4. All the task callbacks (addTask, toggleTask, etc.) get passed down from App
     const hasLoaded = useRef(false);
 
     const [allToDoLists, setAllToDoLists] = useState<ToDoListType[]>([]);
