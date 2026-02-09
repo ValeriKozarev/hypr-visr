@@ -1,14 +1,23 @@
 # hypr-visr
 
 A local-first todo/task management desktop app built with Tauri and React.
+![App Splash Screen](./public/screenshots/splash.svg)
+![App UI #1](./public/screenshots/screenshot1.png)
+![App UI #2](./public/screenshots/screenshot2.png)
+![App UI #3](./public/screenshots/screenshot3.png)
 
 ## Features
 
 - Task creation (categories, descriptions, etc)
 - Drag-and-drop reordering
+- Support for multiple lists
 - Local data persistence
-- TODO: task filtering/searching
-- TODO: loading screen/splash screen
+
+### Future Enhancements:
+- Task filtering and/or search
+- UI to create / edit categories
+- Drag-and-drop support for lists
+- Mobile support
 
 ## Tech Stack
 

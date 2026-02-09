@@ -14,14 +14,20 @@ function App() {
 
     const [allToDoLists, setAllToDoLists] = useState<ToDoListType[]>([]);
     const [selectedListId, setSelectedListId] = useState<number | null>(null);
+    const [showSplash, setShowSplash] = useState(true);
 
     // computed the list thats selected so it plays nice with React
     const selectedList = allToDoLists.find(list => list.id === selectedListId);
 
     useEffect(() => {
-        invoke<ToDoListType[]>('load_lists').then((lists) => {
+        const minDelay = new Promise(resolve => setTimeout(resolve, 1500));
+        const dataLoad = invoke<ToDoListType[]>('load_lists');
+
+        // Wait for BOTH minimum time AND data to load
+        Promise.all([minDelay, dataLoad]).then(([, lists]) => {
             setAllToDoLists(lists);
-            hasLoaded.current = true;  // Mark as loaded to avoid race condition
+            hasLoaded.current = true;
+            setShowSplash(false);
         });
     }, []);
 
@@ -135,6 +141,14 @@ function App() {
     //#region ToDoList operations
 
     //#endregion
+    if (showSplash) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-zinc-900">
+                <img src="/splash.svg" alt="Loading..." className="h-auto w-full max-w-2xl" />
+            </div>
+        );
+    }
+
     return (
         <div className="flex min-h-screen bg-zinc-900 text-neutral-100 antialiased">
             {/* Sidebar */}

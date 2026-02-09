@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <!-- Reference the DSEG font -->
+    <style>
+      @font-face {
+        font-family: 'DSEG14';
+        src: url('/fonts/DSEG14Classic-Bold.woff2') format('woff2');
+      }
+      .title-text {
+        font-family: 'DSEG14', monospace;
+        font-weight: bold;
+      }
+    </style>
+
+    <!-- Amber glow filter -->
+    <filter id="amberGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feFlood flood-color="#fbbf24" flood-opacity="0.6"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Subtle glow for icon -->
+    <filter id="iconGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feFlood flood-color="#fbbf24" flood-opacity="0.3"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Scanline pattern -->
+    <pattern id="scanlines" patternUnits="userSpaceOnUse" width="4" height="4">
+      <line x1="0" y1="0" x2="4" y2="0" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="#18181b"/>
+
+  <!-- Subtle grid lines -->
+  <g stroke="#27272a" stroke-width="0.5" opacity="0.5">
+    <line x1="0" y1="150" x2="800" y2="150"/>
+    <line x1="0" y1="450" x2="800" y2="450"/>
+    <line x1="200" y1="0" x2="200" y2="600"/>
+    <line x1="600" y1="0" x2="600" y2="600"/>
+  </g>
+
+  <!-- Corner accents -->
+  <g stroke="#fbbf24" stroke-width="2" opacity="0.6">
+    <!-- Top left -->
+    <line x1="40" y1="40" x2="100" y2="40"/>
+    <line x1="40" y1="40" x2="40" y2="100"/>
+    <!-- Top right -->
+    <line x1="700" y1="40" x2="760" y2="40"/>
+    <line x1="760" y1="40" x2="760" y2="100"/>
+    <!-- Bottom left -->
+    <line x1="40" y1="560" x2="100" y2="560"/>
+    <line x1="40" y1="500" x2="40" y2="560"/>
+    <!-- Bottom right -->
+    <line x1="700" y1="560" x2="760" y2="560"/>
+    <line x1="760" y1="500" x2="760" y2="560"/>
+  </g>
+
+  <!-- Superintendent Icon (centered) -->
+  <g filter="url(#iconGlow)">
+    <g transform="translate(400, 235) scale(0.5) translate(-318, -324)">
+      <!-- Body -->
+      <path fill="#221E1F" d="M139.502,177.667v276.667c0,0-8,42.668,34.667,45.334h287.333c0,0,38.666,3.334,35.333-46V179
+        c0,0-1.999-34.667-47.333-34H182.836C182.836,145,142.835,147.667,139.502,177.667z"/>
+      <!-- White ring -->
+      <ellipse fill="#FFFFFF" cx="318.169" cy="324" rx="153.333" ry="151"/>
+      <!-- Green face -->
+      <ellipse fill="#5E7E4D" cx="317.836" cy="324.334" rx="141.667" ry="138.666"/>
+      <!-- Eyes -->
+      <ellipse fill="#FFFFFF" cx="254.836" cy="323.666" rx="42" ry="40.667"/>
+      <ellipse fill="#FFFFFF" cx="375.502" cy="323.667" rx="42" ry="40.667"/>
+    </g>
+  </g>
+
+  <!-- Title text -->
+  <text
+    x="400"
+    y="435"
+    text-anchor="middle"
+    class="title-text"
+    font-size="52"
+    letter-spacing="-3"
+    fill="#fbbf24"
+    filter="url(#amberGlow)"
+  >
+    HYPR-VISR
+  </text>
+
+  <!-- Subtitle -->
+  <text
+    x="400"
+    y="480"
+    text-anchor="middle"
+    font-family="monospace"
+    font-size="14"
+    letter-spacing="4"
+    fill="#fbbf24"
+    opacity="0.7"
+  >
+    INITIALIZING SYSTEMS
+  </text>
+
+  <!-- Bottom status line -->
+  <g transform="translate(400, 520)">
+    <line x1="-100" y1="0" x2="100" y2="0" stroke="#fbbf24" stroke-width="1" opacity="0.3"/>
+    <circle cx="-100" cy="0" r="3" fill="#fbbf24" opacity="0.6"/>
+    <circle cx="100" cy="0" r="3" fill="#fbbf24" opacity="0.6"/>
+    <text
+      x="0"
+      y="25"
+      text-anchor="middle"
+      font-family="monospace"
+      font-size="10"
+      fill="#71717a"
+    >
+      v0.1.0
+    </text>
+  </g>
+
+  <!-- Scanline overlay -->
+  <rect width="800" height="600" fill="url(#scanlines)" opacity="0.3"/>
+</svg>
