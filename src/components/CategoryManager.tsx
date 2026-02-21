@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { generateId } from '../utils/generateId';
 import type { Category } from '../types';
 
 // Color configuration with pre-defined Tailwind classes
@@ -95,7 +96,7 @@ export default function CategoryManager({categories, onAdd, onDelete, onClose}: 
         if (label.trim() && icon.trim()) {
             const config = colorConfigs[selectedColor as ColorName];
             const newCategory: Category = {
-                id: label.toLowerCase().replace(/\s+/g, '-'),
+                id: generateId(),
                 label: label.trim(),
                 icon: icon.trim(),
                 color: config.color,

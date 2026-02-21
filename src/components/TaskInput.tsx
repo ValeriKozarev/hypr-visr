@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import CategoryManager from './CategoryManager';
-import type { CategoryEnum, Task, Category } from '../types';
+import type { Task, Category } from '../types';
 
 interface ITaskInputProps {
     // For add mode
-    onAdd?: (title: string, description?: string, category?: CategoryEnum) => void;
+    onAdd?: (title: string, description?: string, category?: string) => void;
 
     // For edit mode
     initialTask?: Task;
@@ -21,7 +21,7 @@ export default function TaskInput({ onAdd, initialTask, onSave, onCancel, catego
 
     const [title, setTitle] = useState(initialTask ? initialTask.title : '');
     const [description, setDescription] = useState(initialTask ? initialTask.description || '' : '');
-    const [category, setCategory] = useState<CategoryEnum | undefined>(initialTask?.category);
+    const [category, setCategory] = useState<string | undefined>(initialTask?.category);
     const [showDetails, setShowDetails] = useState(isEditMode ? true : false);
     const [showCategoryInput, setShowCategoryInput] = useState(false);
 

@@ -5,15 +5,16 @@ import ListManager from "./components/ListManager";
 import { invoke } from '@tauri-apps/api/core';
 import { DragEndEvent } from '@dnd-kit/core';
 import { arrayMove} from '@dnd-kit/sortable';
+import { generateId } from './utils/generateId';
 import "./App.css";
 
-import type { Task, ToDoList as ToDoListType, CategoryEnum, Category } from "./types";
+import type { Task, ToDoList as ToDoListType, Category } from "./types";
 
 function App() {
     const hasLoaded = useRef(false);
 
     const [allToDoLists, setAllToDoLists] = useState<ToDoListType[]>([]);
-    const [selectedListId, setSelectedListId] = useState<number | null>(null);
+    const [selectedListId, setSelectedListId] = useState<string | null>(null);
     const [categories, setCategories] = useState<Category[]>([]);
     const [showSplash, setShowSplash] = useState(true);
 
@@ -41,7 +42,7 @@ function App() {
     }, [allToDoLists, categories]);
 
     //#region Task operations
-    function removeTaskFromList(id: number) {
+    function removeTaskFromList(id: string) {
         setAllToDoLists(lists => lists.map(list =>
             list.id === selectedListId
                 ? { ...list, tasks: list.tasks.filter(t => t.id !== id) }                
@@ -49,9 +50,9 @@ function App() {
         ));
     }
 
-    function addTaskToList(title: string, description?: string, category?: CategoryEnum) {
+    function addTaskToList(title: string, description?: string, category?: string) {
         const newTask: Task = {
-            id: Date.now(),
+            id: generateId(),
             title,
             isDone: false,
             description,
@@ -64,7 +65,7 @@ function App() {
         ));
     }
 
-    function editTask(id: number, updates: Partial<Task>) {
+    function editTask(id: string, updates: Partial<Task>) {
         setAllToDoLists(lists => lists.map(list => {
             if (list.id !== selectedListId) return list;
 
@@ -77,7 +78,7 @@ function App() {
         }));
     }
     
-    function toggleTask(id: number) {
+    function toggleTask(id: string) {
         setAllToDoLists(lists => lists.map(list => {
             if (list.id !== selectedListId) return list;
 
@@ -120,7 +121,7 @@ function App() {
     //#region List operations
     function addList(name: string) {
         const newList: ToDoListType = {
-            id: Date.now(),
+            id: generateId(),
             name,
             tasks: []
         };
@@ -128,7 +129,7 @@ function App() {
         setSelectedListId(newList.id);  // auto-select the new list
     }
 
-    function deleteList(id: number) {
+    function deleteList(id: string) {
         setAllToDoLists(lists => lists.filter(list => list.id !== id));
         // If we deleted the selected list, clear selection
         if (selectedListId === id) {
@@ -136,7 +137,7 @@ function App() {
         }
     }
 
-    function renameList(id: number, name: string) {
+    function renameList(id: string, name: string) {
         setAllToDoLists(lists => lists.map(list =>
             list.id === id ? { ...list, name } : list
         ));
@@ -148,7 +149,7 @@ function App() {
         setCategories(categories => [...categories, category])
     }
 
-    function deleteCategory(id: CategoryEnum) {
+    function deleteCategory(id: string) {
         setCategories(categories => categories.filter(category => category.id !== id))
 
         // dont forget to update tasks that use this category
@@ -158,12 +159,6 @@ function App() {
                     task.category === id ? {...task, category: undefined} : task
                 )
             })
-        ));
-    }
-
-    function editCategory(id: CategoryEnum, updates: Partial<Category>) {
-        setCategories(categories => categories.map(category => 
-            category.id === id ? {...category, ...updates} : category
         ));
     }
     //#endregion

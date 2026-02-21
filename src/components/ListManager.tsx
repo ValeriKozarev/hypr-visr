@@ -5,15 +5,15 @@ import type { ToDoList } from "../types";
 
 interface IListManagerProps {
     lists: ToDoList[];
-    selectedListId: number | null;
-    onListSelect: (id: number) => void;
+    selectedListId: string | null;
+    onListSelect: (id: string) => void;
     onAddList: (name: string) => void;
-    onDeleteList: (id: number) => void;
-    onRenameList: (id: number, name: string) => void;
+    onDeleteList: (id: string) => void;
+    onRenameList: (id: string, name: string) => void;
 }
 
 export default function ListManager({lists, selectedListId, onListSelect, onAddList, onDeleteList, onRenameList}: IListManagerProps) {
-    const [editingListId, setEditingListId] = useState<number | null>(null);
+    const [editingListId, setEditingListId] = useState<string | null>(null);
 
     return (
         <section>

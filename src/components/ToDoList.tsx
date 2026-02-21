@@ -3,14 +3,14 @@ import TaskInput from "./TaskInput";
 import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
-import type { CategoryEnum, Category, ToDoList as ToDoListType, Task } from '../types';
+import type { Category, ToDoList as ToDoListType, Task } from '../types';
 
 interface IToDoListProps {
     list: ToDoListType;
-    onRemoveTask: (id: number) => void;
-    onEditTask: (id: number, updates: Partial<Task>) => void;
-    onAddTask: (title: string, description?: string, category?: CategoryEnum) => void;
-    onToggleTask: (id: number) => void;
+    onRemoveTask: (id: string) => void;
+    onEditTask: (id: string, updates: Partial<Task>) => void;
+    onAddTask: (title: string, description?: string, category?: string) => void;
+    onToggleTask: (id: string) => void;
     onDragTask: (event: DragEndEvent) => void;
     categories: Category[];
     onAddCategory: (category: Category) => void;
@@ -49,6 +49,7 @@ export default function ToDoList({ list, onRemoveTask, onEditTask, onAddTask, on
                                     onDelete={onRemoveTask}
                                     categories={categories}
                                     onAddCategory={onAddCategory}
+                                    onDeleteCategory={onDeleteCategory}
                                 />
                             ))}
                         </ul>
@@ -81,6 +82,7 @@ export default function ToDoList({ list, onRemoveTask, onEditTask, onAddTask, on
                                 onDelete={onRemoveTask}
                                 categories={categories}
                                 onAddCategory={onAddCategory}
+                                onDeleteCategory={onDeleteCategory}
                             />
                         ))}
                     </ul>

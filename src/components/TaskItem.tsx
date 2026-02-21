@@ -6,14 +6,15 @@ import TaskInput from './TaskInput';
 
 interface ITaskItemProps {
     task: Task;
-    onEdit: (id: number, updates: Partial<Task>) => void;
-    onToggle: (id: number) => void;
-    onDelete: (id: number) => void;
+    onEdit: (id: string, updates: Partial<Task>) => void;
+    onToggle: (id: string) => void;
+    onDelete: (id: string) => void;
     categories: Category[];
     onAddCategory: (category: Category) => void
+    onDeleteCategory: (id: string) => void
 }
 
-export default function TaskItem({ task, onEdit, onToggle, onDelete, categories, onAddCategory }: ITaskItemProps) {
+export default function TaskItem({ task, onEdit, onToggle, onDelete, categories, onAddCategory, onDeleteCategory }: ITaskItemProps) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -49,6 +50,7 @@ export default function TaskItem({ task, onEdit, onToggle, onDelete, categories,
                     onCancel={() => setIsEditing(false)}
                     categories={categories}
                     onAddCategory={onAddCategory}
+                    onDeleteCategory={onDeleteCategory}
                 />
             ) : (
                 <div className="flex items-center gap-3 p-3">

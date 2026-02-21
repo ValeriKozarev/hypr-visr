@@ -1,7 +1,5 @@
-export type CategoryEnum = string;
-
 export type Category = {
-    id: CategoryEnum,
+    id: string,
     icon: string,
     label: string,
     color: string,
@@ -10,15 +8,15 @@ export type Category = {
 }
 
 export type Task = {
-    id: number;
+    id: string;
     title: string;
     isDone: boolean;
     description?: string;
-    category?: CategoryEnum;
+    category?: string;
 }
 
 export type ToDoList = {
-    id: number;
+    id: string;
     name: string;
     tasks: Task[];
 }

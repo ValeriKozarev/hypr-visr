@@ -4,7 +4,7 @@ use std::path::PathBuf;
 
 #[derive(Serialize, Deserialize)]
 struct Task {
-    id: u64,
+    id: String,
     title: String,
     #[serde(rename = "isDone")]
     is_done: bool,
@@ -26,7 +26,7 @@ struct Category {
 
 #[derive(Serialize, Deserialize)]
 struct ToDoList {
-    id: u64,
+    id: String,
     name: String,
     tasks: Vec<Task>,
 }
