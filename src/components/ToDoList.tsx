@@ -1,6 +1,16 @@
+import { useState } from 'react';
 import TaskItem from "./TaskItem";
 import TaskInput from "./TaskInput";
-import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
+import {
+    DndContext,
+    closestCenter,
+    DragEndEvent,
+    DragStartEvent,
+    DragOverlay,
+    PointerSensor,
+    useSensor,
+    useSensors
+} from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
 import type { Category, ToDoList as ToDoListType, Task } from '../types';
@@ -17,9 +27,34 @@ interface IToDoListProps {
     onDeleteCategory: (id: string) => void;
 }
 
-export default function ToDoList({ list, onRemoveTask, onEditTask, onAddTask, onToggleTask, onDragTask, categories, onAddCategory, onDeleteCategory }: IToDoListProps) {    
+export default function ToDoList({ list, onRemoveTask, onEditTask, onAddTask, onToggleTask, onDragTask, categories, onAddCategory, onDeleteCategory }: IToDoListProps) {
     const activeTasks = list.tasks.filter(t => !t.isDone);
     const completedTasks = list.tasks.filter(t => t.isDone);
+    const [activeId, setActiveId] = useState<string | null>(null);
+
+    // Optimized sensor - requires 5px movement before drag starts (prevents accidental drags)
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 5,
+            },
+        })
+    );
+
+    function handleDragStart(event: DragStartEvent) {
+        setActiveId(event.active.id as string);
+    }
+
+    function handleDragEnd(event: DragEndEvent) {
+        setActiveId(null);
+        onDragTask(event);
+    }
+
+    function handleDragCancel() {
+        setActiveId(null);
+    }
+
+    const activeTask = activeId ? activeTasks.find(t => t.id === activeId) : null;
 
     return (
         <div className="space-y-6">
@@ -37,7 +72,13 @@ export default function ToDoList({ list, onRemoveTask, onEditTask, onAddTask, on
                         </span>
                     )}
                 </div>
-                <DndContext collisionDetection={closestCenter} onDragEnd={onDragTask}>
+                <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
+                    onDragCancel={handleDragCancel}
+                >
                     <SortableContext items={activeTasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
                         <ul className="space-y-2">
                             {activeTasks.map(task => (
@@ -50,10 +91,30 @@ export default function ToDoList({ list, onRemoveTask, onEditTask, onAddTask, on
                                     categories={categories}
                                     onAddCategory={onAddCategory}
                                     onDeleteCategory={onDeleteCategory}
+                                    isDragging={task.id === activeId}
                                 />
                             ))}
                         </ul>
                     </SortableContext>
+
+                    {/* DragOverlay provides smooth dragging */}
+                    <DragOverlay>
+                        {activeTask ? (
+                            <div className="cursor-grabbing">
+                                <TaskItem
+                                    task={activeTask}
+                                    onEdit={onEditTask}
+                                    onToggle={onToggleTask}
+                                    onDelete={onRemoveTask}
+                                    categories={categories}
+                                    onAddCategory={onAddCategory}
+                                    onDeleteCategory={onDeleteCategory}
+                                    isDragging={false}
+                                    isOverlay
+                                />
+                            </div>
+                        ) : null}
+                    </DragOverlay>
                 </DndContext>
                 {activeTasks.length === 0 && (
                     <div className="rounded border border-zinc-700 bg-zinc-800/50">

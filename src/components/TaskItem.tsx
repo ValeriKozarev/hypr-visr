@@ -12,15 +12,27 @@ interface ITaskItemProps {
     categories: Category[];
     onAddCategory: (category: Category) => void
     onDeleteCategory: (id: string) => void
+    isDragging?: boolean;
+    isOverlay?: boolean;
 }
 
-export default function TaskItem({ task, onEdit, onToggle, onDelete, categories, onAddCategory, onDeleteCategory }: ITaskItemProps) {
+export default function TaskItem({ task, onEdit, onToggle, onDelete, categories, onAddCategory, onDeleteCategory, isDragging, isOverlay }: ITaskItemProps) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: task.id });
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+    } = useSortable({
+        id: task.id,
+        disabled: isOverlay, // Disable sorting for overlay
+    });
 
-    const style = {
+    // Only apply transform if NOT using overlay
+    const style = isOverlay ? {} : {
         transform: CSS.Transform.toString(transform),
         transition,
     };
@@ -34,11 +46,15 @@ export default function TaskItem({ task, onEdit, onToggle, onDelete, categories,
             ref={setNodeRef}
             style={style}
             {...attributes}
-            className={`group rounded border shadow-lg transition-all hover:shadow-xl ${
+            className={`group rounded border shadow-lg hover:shadow-xl ${
                 categoryConfig
                     ? `${categoryConfig.bgColor} ${categoryConfig.borderColor} ${categoryConfig.color}`
                     : 'border-zinc-700 bg-zinc-800 text-neutral-100'
-            } ${task.isDone ? 'opacity-60' : ''}`}
+            } ${task.isDone ? 'opacity-60' : ''} ${
+                isDragging ? 'opacity-40' : ''
+            } ${
+                isOverlay ? 'cursor-grabbing rotate-2 scale-105' : ''
+            }`}
         >
             {isEditing ? (
                 <TaskInput
