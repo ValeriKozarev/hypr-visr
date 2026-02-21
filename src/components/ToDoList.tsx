@@ -103,12 +103,12 @@ export default function ToDoList({ list, onRemoveTask, onEditTask, onAddTask, on
                             <div className="cursor-grabbing">
                                 <TaskItem
                                     task={activeTask}
-                                    onEdit={onEditTask}
-                                    onToggle={onToggleTask}
-                                    onDelete={onRemoveTask}
+                                    onEdit={() => {}}
+                                    onToggle={() => {}}
+                                    onDelete={() => {}}
                                     categories={categories}
-                                    onAddCategory={onAddCategory}
-                                    onDeleteCategory={onDeleteCategory}
+                                    onAddCategory={() => {}}
+                                    onDeleteCategory={() => {}}
                                     isDragging={false}
                                     isOverlay
                                 />

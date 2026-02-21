@@ -89,15 +89,12 @@ export default function ListManager({lists, selectedListId, onListSelect, onDrag
                     {activeList ? (
                         <ListItem
                             list={activeList}
-                            isSelected={true}
+                            isSelected={selectedListId === activeList.id}
                             isEditing={false}
                             onSelect={onListSelect}
-                            onStartEdit={() => setEditingListId(activeList.id)}
-                            onSaveEdit={(name: string) => {
-                                onRenameList(activeList.id, name);
-                                setEditingListId(null);
-                            }}
-                            onCancelEdit={() => setEditingListId(null)}
+                            onStartEdit={() => {}} // no-op since we are in an overlay
+                            onSaveEdit={() => {}}
+                            onCancelEdit={() => {}}
                             onDelete={onDeleteList}
                             isDragging={false}
                             isOverlay
