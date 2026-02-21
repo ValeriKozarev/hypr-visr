@@ -34,6 +34,24 @@
   --color-cyan: #06b6d4;
 }
 
+/* Fix overscroll white background */
+html,
+body {
+  background-color: #18181b; /* zinc-900 */
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent body scroll */
+  height: 100%;
+  width: 100%;
+}
+
+/* App root should fill viewport */
+#root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
 .font-tech {
   font-family: 'DSEG14', monospace;
   font-weight: 700;

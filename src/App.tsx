@@ -173,9 +173,9 @@ function App() {
     }
 
     return (
-        <div className="flex min-h-screen bg-zinc-900 text-neutral-100 antialiased">
+        <div className="flex h-screen bg-zinc-900 text-neutral-100 antialiased">
             {/* Sidebar */}
-            <aside className="w-64 shrink-0 border-r border-zinc-700/50 bg-zinc-950 p-4">
+            <aside className="w-64 shrink-0 border-r border-zinc-700/50 bg-zinc-950 p-4 overflow-y-auto">
                 <ListManager
                     lists={allToDoLists}
                     selectedListId={selectedListId}
@@ -187,8 +187,8 @@ function App() {
             </aside>
 
             {/* Main content */}
-            <main className="flex-1 px-8 py-12">
-                <div className="mx-auto max-w-2xl">
+            <main className="flex-1 overflow-y-auto">
+                <div className="mx-auto max-w-2xl px-8 py-12">
                     <Header />
 
                     {selectedList ? (
