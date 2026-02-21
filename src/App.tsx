@@ -100,7 +100,7 @@ function App() {
         }));
     }
 
-    function handleDragEnd(event: DragEndEvent) {
+    function handleTaskDragEnd(event: DragEndEvent) {
         const { active, over } = event;
         if (!over || active.id === over.id) return;
 
@@ -142,6 +142,16 @@ function App() {
             list.id === id ? { ...list, name } : list
         ));
     }
+
+    function handleListDragEnd(event: DragEndEvent) {
+        const { active, over } = event;
+        if (!over || active.id === over.id) return;
+
+        const oldIndex = allToDoLists.findIndex(l => l.id === active.id);
+        const newIndex = allToDoLists.findIndex(l => l.id === over.id);
+
+        setAllToDoLists(arrayMove(allToDoLists, oldIndex, newIndex));
+    }
     //#endregion
 
     //#region Category operations
@@ -180,6 +190,7 @@ function App() {
                     lists={allToDoLists}
                     selectedListId={selectedListId}
                     onListSelect={setSelectedListId}
+                    onDragList={handleListDragEnd}
                     onAddList={addList}
                     onDeleteList={deleteList}
                     onRenameList={renameList}
@@ -198,7 +209,7 @@ function App() {
                             onEditTask={editTask}
                             onAddTask={addTaskToList}
                             onToggleTask={toggleTask}
-                            onDragTask={handleDragEnd}
+                            onDragTask={handleTaskDragEnd}
                             categories={categories}
                             onAddCategory={addCategory}
                             onDeleteCategory={deleteCategory}
