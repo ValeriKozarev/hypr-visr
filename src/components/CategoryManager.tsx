@@ -1,82 +1,10 @@
 import { useState } from 'react';
 import { generateId } from '../utils/generateId';
+import { COLOR_OPTIONS } from '../utils/colors';
+
 import type { Category } from '../types';
 
-// Color configuration with pre-defined Tailwind classes
-const colorConfigs = {
-    blue: {
-        name: 'blue',
-        hex: '#3b82f6',
-        color: 'text-blue-400',
-        bgColor: 'bg-blue-950/30',
-        borderColor: 'border-blue-500/50',
-    },
-    green: {
-        name: 'green',
-        hex: '#22c55e',
-        color: 'text-green-400',
-        bgColor: 'bg-green-950/30',
-        borderColor: 'border-green-500/50',
-    },
-    amber: {
-        name: 'amber',
-        hex: '#f59e0b',
-        color: 'text-amber-400',
-        bgColor: 'bg-amber-950/30',
-        borderColor: 'border-amber-500/50',
-    },
-    red: {
-        name: 'red',
-        hex: '#ef4444',
-        color: 'text-red-400',
-        bgColor: 'bg-red-950/30',
-        borderColor: 'border-red-500/50',
-    },
-    purple: {
-        name: 'purple',
-        hex: '#a855f7',
-        color: 'text-purple-400',
-        bgColor: 'bg-purple-950/30',
-        borderColor: 'border-purple-500/50',
-    },
-    pink: {
-        name: 'pink',
-        hex: '#ec4899',
-        color: 'text-pink-400',
-        bgColor: 'bg-pink-950/30',
-        borderColor: 'border-pink-500/50',
-    },
-    indigo: {
-        name: 'indigo',
-        hex: '#6366f1',
-        color: 'text-indigo-400',
-        bgColor: 'bg-indigo-950/30',
-        borderColor: 'border-indigo-500/50',
-    },
-    teal: {
-        name: 'teal',
-        hex: '#14b8a6',
-        color: 'text-teal-400',
-        bgColor: 'bg-teal-950/30',
-        borderColor: 'border-teal-500/50',
-    },
-    orange: {
-        name: 'orange',
-        hex: '#f97316',
-        color: 'text-orange-400',
-        bgColor: 'bg-orange-950/30',
-        borderColor: 'border-orange-500/50',
-    },
-    cyan: {
-        name: 'cyan',
-        hex: '#06b6d4',
-        color: 'text-cyan-400',
-        bgColor: 'bg-cyan-950/30',
-        borderColor: 'border-cyan-500/50',
-    },
-}
-
-type ColorName = keyof typeof colorConfigs;
+type ColorName = keyof typeof COLOR_OPTIONS;
 
 interface ICategoryManagerProps {
     categories: Category[];
@@ -90,11 +18,11 @@ export default function CategoryManager({categories, onAdd, onDelete, onClose}: 
     const [icon, setIcon] = useState('');
     const [selectedColor, setSelectedColor] = useState('blue');
 
-    const availableColors = Object.keys(colorConfigs) as ColorName[];
+    const availableColors = Object.keys(COLOR_OPTIONS) as ColorName[];
 
     function handleAdd() {
         if (label.trim() && icon.trim()) {
-            const config = colorConfigs[selectedColor as ColorName];
+            const config = COLOR_OPTIONS[selectedColor as ColorName];
             const newCategory: Category = {
                 id: generateId(),
                 label: label.trim(),
@@ -206,7 +134,7 @@ focus:outline-none focus:ring-2 focus:ring-amber-400/20"
                                     : 'border-zinc-600 hover:scale-105'
                             }`}
                             style={{
-                                backgroundColor: colorConfigs[color].hex,
+                                backgroundColor: COLOR_OPTIONS[color].hex,
                             }}
                             aria-label={`Select ${color} color`}
                         />
