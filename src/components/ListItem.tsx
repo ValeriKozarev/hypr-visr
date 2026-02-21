@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -47,27 +46,15 @@ export default function ListItem({list, isSelected, isEditing, onSelect, onStart
                 isSelected
                     ? 'bg-amber-400/10 text-amber-400 border-l-2 border-amber-400'
                     : 'text-neutral-400 hover:bg-zinc-800 hover:text-neutral-200'
+            } ${
+                isDragging ? 'opacity-40' : ''
+            } ${
+                isOverlay ? 'cursor-grabbing rotate-2 scale-105' : ''
             }`}
             onClick={() => {
                 onSelect(list.id);
-                onStartEdit();
             }}
         >
-            <span
-                {...listeners}
-                className="cursor-grab touch-none text-zinc-600 opacity-0 transition-opacity hover:text-zinc-400 group-hover:opacity-100"
-                aria-label="Drag to reorder"
-            >
-                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 16 16">
-                    <circle cx="4" cy="3" r="1.5"/>
-                    <circle cx="4" cy="8" r="1.5"/>
-                    <circle cx="4" cy="13" r="1.5"/>
-                    <circle cx="10" cy="3" r="1.5"/>
-                    <circle cx="10" cy="8" r="1.5"/>
-                    <circle cx="10" cy="13" r="1.5"/>
-                </svg>
-            </span>
-
             {isEditing ? (
                 <input
                     autoFocus
@@ -87,16 +74,35 @@ export default function ListItem({list, isSelected, isEditing, onSelect, onStart
                     }}
                 />
             ) : (
-                <span className="truncate">{list.name}</span>
+                <>
+                    {!isOverlay && (
+                        <span
+                            {...listeners}
+                            className="cursor-grab touch-none text-zinc-600 opacity-0 transition-opacity hover:text-zinc-400 group-hover:opacity-100"
+                            aria-label="Drag to reorder"
+                        >
+                            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 16 16">
+                                <circle cx="4" cy="3" r="1.5"/>
+                                <circle cx="4" cy="8" r="1.5"/>
+                                <circle cx="4" cy="13" r="1.5"/>
+                                <circle cx="10" cy="3" r="1.5"/>
+                                <circle cx="10" cy="8" r="1.5"/>
+                                <circle cx="10" cy="13" r="1.5"/>
+                            </svg>
+                        </span>
+                    )}
+                    <span className="flex-1 truncate">{list.name}</span>
+                </>
             )}
 
-            {!isEditing && (
+            {!isEditing && !isOverlay && (
                 <div className="flex shrink-0 items-center gap-1">
                     {/* Edit button */}
                     <button
                         className="shrink-0 rounded p-1 text-zinc-600 opacity-0 transition-all hover:bg-zinc-700 hover:text-amber-400 group-hover:opacity-100"
                         onClick={(e) => {
                             e.stopPropagation();
+                            onStartEdit();
                         }}
                         aria-label="Rename list"
                     >
