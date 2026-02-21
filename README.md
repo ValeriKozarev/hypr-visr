@@ -16,14 +16,9 @@ A local-first todo/task management desktop app built with Tauri and React.
 - Local data persistence
 
 ### Future Enhancements:
-- Task filtering and/or search
-- UI to create / edit categories
-- fix scroll issue with window
-- fix categories not adding
-- add a color picker and emoji picket
-- fix dnd on tasks being a bit wonky
 - Drag-and-drop support for lists
 - Icons for lists
+- Task filtering and/or search
 - Add other tabs: Notes, Recipes, etc.
 - Mobile support
 
