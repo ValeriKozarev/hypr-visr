@@ -206,6 +206,7 @@ function App() {
                             onDragTask={handleDragEnd}
                             categories={categories}
                             onAddCategory={addCategory}
+                            onDeleteCategory={deleteCategory}
                         />
                     ) : (
                         <div className="rounded border border-zinc-700 bg-zinc-800/50 py-16 text-center">

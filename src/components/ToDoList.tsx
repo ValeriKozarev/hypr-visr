@@ -14,15 +14,16 @@ interface IToDoListProps {
     onDragTask: (event: DragEndEvent) => void;
     categories: Category[];
     onAddCategory: (category: Category) => void;
+    onDeleteCategory: (id: string) => void;
 }
 
-export default function ToDoList({ list, onRemoveTask, onEditTask, onAddTask, onToggleTask, onDragTask, categories, onAddCategory }: IToDoListProps) {    
+export default function ToDoList({ list, onRemoveTask, onEditTask, onAddTask, onToggleTask, onDragTask, categories, onAddCategory, onDeleteCategory }: IToDoListProps) {    
     const activeTasks = list.tasks.filter(t => !t.isDone);
     const completedTasks = list.tasks.filter(t => t.isDone);
 
     return (
         <div className="space-y-6">
-            <TaskInput onAdd={onAddTask} categories={categories} onAddCategory={onAddCategory}/>    
+            <TaskInput onAdd={onAddTask} categories={categories} onAddCategory={onAddCategory} onDeleteCategory={onDeleteCategory}/>    
 
             {/* Active Tasks */}
             <section>

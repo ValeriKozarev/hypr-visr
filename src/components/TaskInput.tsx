@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import CategoryInput from './CategoryInput';
+import CategoryManager from './CategoryManager';
 import type { CategoryEnum, Task, Category } from '../types';
 
 interface ITaskInputProps {
@@ -13,9 +13,10 @@ interface ITaskInputProps {
 
     categories: Category[];
     onAddCategory: (category: Category) => void;
+    onDeleteCategory: (id: string) => void;
 }
 
-export default function TaskInput({ onAdd, initialTask, onSave, onCancel, categories, onAddCategory }: ITaskInputProps) {
+export default function TaskInput({ onAdd, initialTask, onSave, onCancel, categories, onAddCategory, onDeleteCategory }: ITaskInputProps) {
     const isEditMode = !!initialTask
 
     const [title, setTitle] = useState(initialTask ? initialTask.title : '');
@@ -108,10 +109,16 @@ export default function TaskInput({ onAdd, initialTask, onSave, onCancel, catego
                                 <button
                                     key={cat.id}
                                     onClick={() => setCategory(cat.id)}
-                                    className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+                                    className={`rounded-full border px-3 py-1 text-xs font-medium transition-all ${
+                                        cat.bgColor
+                                    } ${
+                                        cat.borderColor
+                                    } ${
+                                        cat.color
+                                    } ${
                                         category === cat.id
-                                            ? `bg-zinc-800 ${cat.color} ${cat.borderColor}`
-                                            : 'border-zinc-600 bg-zinc-700 text-neutral-400 hover:bg-zinc-600'
+                                            ? 'ring-1 ring-amber-400 scale-105'
+                                            : 'hover:scale-105 opacity-80 hover:opacity-100'
                                     }`}
                                 >
                                     {cat.icon} {cat.label}
@@ -140,20 +147,21 @@ export default function TaskInput({ onAdd, initialTask, onSave, onCancel, catego
                         <button
                             onClick={() => setShowCategoryInput(true)}
                             className="rounded-full border border-dashed border-zinc-600 px-3 py-1 text-xs font-medium text-neutral-500 transition-colors hover:border-amber-400/50
-            hover:text-amber-400"
+                    hover:text-amber-400"
                         >
-                            + Add Category
+                            Manage Categories
                         </button>
                     )}
 
                     {showCategoryInput && (
-                        <CategoryInput
+                        <CategoryManager
+                            categories={categories}
                             onAdd={(newCategory) => {
                                 onAddCategory(newCategory);
-                                setShowCategoryInput(false);
                                 setCategory(newCategory.id);  // Auto-select the new category
                             }}
-                            onCancel={() => setShowCategoryInput(false)}
+                            onDelete={onDeleteCategory}
+                            onClose={() => setShowCategoryInput(false)}
                         />
                     )}
                 </div>
