@@ -3,6 +3,7 @@ import { generateId } from '../utils/generateId';
 import { COLOR_OPTIONS } from '../utils/colors';
 
 import type { Category } from '../types';
+import EmojiPicker from './EmojiPicker';
 
 type ColorName = keyof typeof COLOR_OPTIONS;
 
@@ -111,14 +112,9 @@ export default function CategoryManager({categories, onAdd, onDelete, onClose}: 
 focus:outline-none focus:ring-2 focus:ring-amber-400/20"
                 />
 
-                <input
-                    type="text"
-                    placeholder="Icon (emoji)..."
-                    maxLength={2}
+                <EmojiPicker
                     value={icon}
-                    onChange={(e) => setIcon(e.target.value)}
-                    className="w-full rounded border border-zinc-600 bg-zinc-800 px-3 py-2 text-sm text-neutral-100 placeholder-neutral-500 focus:border-amber-400/50
-focus:outline-none focus:ring-2 focus:ring-amber-400/20"
+                    onChange={setIcon}
                 />
 
                 <div>
