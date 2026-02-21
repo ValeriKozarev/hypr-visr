@@ -13,10 +13,28 @@ struct Task {
 }
 
 #[derive(Serialize, Deserialize)]
+struct Category {
+    id: String,
+    icon: String,
+    label: String,
+    color: String,
+    #[serde(rename = "bgColor")]
+    bg_color: String,
+    #[serde(rename = "borderColor")]
+    border_color: String,
+}
+
+#[derive(Serialize, Deserialize)]
 struct ToDoList {
     id: u64,
     name: String,
     tasks: Vec<Task>,
+}
+
+#[derive(Serialize, Deserialize)]
+struct AppData {
+    categories: Vec<Category>,
+    lists: Vec<ToDoList>,
 }
 
 fn get_data_path() -> PathBuf {
@@ -30,23 +48,30 @@ fn get_data_path() -> PathBuf {
 }
 
 #[tauri::command]
-fn load_lists() -> Vec<ToDoList> {
+fn load_app_data() -> AppData {
     let path = get_data_path();
 
-    // If file doesn't exist, return empty vec
+    // If file doesn't exist, return empty data
     if !path.exists() {
-        return Vec::new();
+        return AppData {
+            categories: Vec::new(),
+            lists: Vec::new(),
+        };
     }
 
     // Read file and parse JSON
     let contents = fs::read_to_string(&path).unwrap_or_default();
-    serde_json::from_str(&contents).unwrap_or_else(|_| Vec::new())
+    serde_json::from_str(&contents).unwrap_or_else(|_| AppData {
+        categories: Vec::new(),
+        lists: Vec::new(),
+    })
 }
 
 #[tauri::command]
-fn save_lists(lists: Vec<ToDoList>) {
+fn save_app_data(categories: Vec<Category>, lists: Vec<ToDoList>) {
     let path = get_data_path();
-    let json = serde_json::to_string_pretty(&lists).expect("Failed to serialize");
+    let data = AppData { categories, lists };
+    let json = serde_json::to_string_pretty(&data).expect("Failed to serialize");
     fs::write(&path, json).expect("Failed to write file");
 }
 
@@ -54,7 +79,7 @@ fn save_lists(lists: Vec<ToDoList>) {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![load_lists, save_lists])        
+        .invoke_handler(tauri::generate_handler![load_app_data, save_app_data])        
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

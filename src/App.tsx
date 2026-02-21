@@ -7,13 +7,14 @@ import { DragEndEvent } from '@dnd-kit/core';
 import { arrayMove} from '@dnd-kit/sortable';
 import "./App.css";
 
-import type { Task, ToDoList as ToDoListType, CategoryEnum } from "./types";
+import type { Task, ToDoList as ToDoListType, CategoryEnum, Category } from "./types";
 
 function App() {
     const hasLoaded = useRef(false);
 
     const [allToDoLists, setAllToDoLists] = useState<ToDoListType[]>([]);
     const [selectedListId, setSelectedListId] = useState<number | null>(null);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [showSplash, setShowSplash] = useState(true);
 
     // computed the list thats selected so it plays nice with React
@@ -21,11 +22,12 @@ function App() {
 
     useEffect(() => {
         const minDelay = new Promise(resolve => setTimeout(resolve, 1500));
-        const dataLoad = invoke<ToDoListType[]>('load_lists');
+        const dataLoad = invoke<{ categories: Category[], lists: ToDoListType[] }>('load_app_data');
 
         // Wait for BOTH minimum time AND data to load
-        Promise.all([minDelay, dataLoad]).then(([, lists]) => {
-            setAllToDoLists(lists);
+        Promise.all([minDelay, dataLoad]).then(([, data]) => {
+            setCategories(data.categories);
+            setAllToDoLists(data.lists);
             hasLoaded.current = true;
             setShowSplash(false);
         });
@@ -34,9 +36,9 @@ function App() {
     // Save when anything changes (but not before initial load)
     useEffect(() => {
         if (hasLoaded.current) {
-            invoke('save_lists', { lists: allToDoLists });
+            invoke('save_app_data', { categories, lists: allToDoLists });
         }
-    }, [allToDoLists]);
+    }, [allToDoLists, categories]);
 
     //#region Task operations
     function removeTaskFromList(id: number) {
@@ -115,6 +117,7 @@ function App() {
         }));
     }
     //#endregion
+    //#region List operations
     function addList(name: string) {
         const newList: ToDoListType = {
             id: Date.now(),
@@ -138,9 +141,34 @@ function App() {
             list.id === id ? { ...list, name } : list
         ));
     }
-    //#region ToDoList operations
-
     //#endregion
+
+    //#region Category operations
+    function addCategory(category: Category) {
+        setCategories(categories => [...categories, category])
+    }
+
+    function deleteCategory(id: CategoryEnum) {
+        setCategories(categories => categories.filter(category => category.id !== id))
+
+        // dont forget to update tasks that use this category
+        setAllToDoLists(lists => lists.map(list => ({
+                ...list,
+                tasks: list.tasks.map(task =>
+                    task.category === id ? {...task, category: undefined} : task
+                )
+            })
+        ));
+    }
+
+    function editCategory(id: CategoryEnum, updates: Partial<Category>) {
+        setCategories(categories => categories.map(category => 
+            category.id === id ? {...category, ...updates} : category
+        ));
+    }
+    //#endregion
+
+    // loading splash screen
     if (showSplash) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-zinc-900">
@@ -176,6 +204,8 @@ function App() {
                             onAddTask={addTaskToList}
                             onToggleTask={toggleTask}
                             onDragTask={handleDragEnd}
+                            categories={categories}
+                            onAddCategory={addCategory}
                         />
                     ) : (
                         <div className="rounded border border-zinc-700 bg-zinc-800/50 py-16 text-center">

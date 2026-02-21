@@ -1,24 +1,28 @@
 import { useState } from 'react';
-import { CATEGORIES } from '../types';
-import type { CategoryEnum, Task } from '../types';
+import CategoryInput from './CategoryInput';
+import type { CategoryEnum, Task, Category } from '../types';
 
 interface ITaskInputProps {
-      // For add mode
-      onAdd?: (title: string, description?: string, category?: CategoryEnum) => void;
+    // For add mode
+    onAdd?: (title: string, description?: string, category?: CategoryEnum) => void;
 
-      // For edit mode
-      initialTask?: Task;
-      onSave?: (updates: Partial<Task>) => void;
-      onCancel?: () => void;}
+    // For edit mode
+    initialTask?: Task;
+    onSave?: (updates: Partial<Task>) => void;
+    onCancel?: () => void;
 
-export default function TaskInput({ onAdd, initialTask, onSave, onCancel }: ITaskInputProps) {
+    categories: Category[];
+    onAddCategory: (category: Category) => void;
+}
+
+export default function TaskInput({ onAdd, initialTask, onSave, onCancel, categories, onAddCategory }: ITaskInputProps) {
     const isEditMode = !!initialTask
 
     const [title, setTitle] = useState(initialTask ? initialTask.title : '');
     const [description, setDescription] = useState(initialTask ? initialTask.description || '' : '');
     const [category, setCategory] = useState<CategoryEnum | undefined>(initialTask?.category);
     const [showDetails, setShowDetails] = useState(isEditMode ? true : false);
-
+    const [showCategoryInput, setShowCategoryInput] = useState(false);
 
     function addTask() {
         if (title.trim()) {
@@ -100,7 +104,7 @@ export default function TaskInput({ onAdd, initialTask, onSave, onCancel }: ITas
                             >
                                 None
                             </button>
-                            {CATEGORIES.map((cat) => (
+                            {categories.map((cat) => (
                                 <button
                                     key={cat.id}
                                     onClick={() => setCategory(cat.id)}
@@ -131,6 +135,27 @@ export default function TaskInput({ onAdd, initialTask, onSave, onCancel }: ITas
                             Cancel
                         </button>
                     </div>
+                    
+                    {!showCategoryInput && (
+                        <button
+                            onClick={() => setShowCategoryInput(true)}
+                            className="rounded-full border border-dashed border-zinc-600 px-3 py-1 text-xs font-medium text-neutral-500 transition-colors hover:border-amber-400/50
+            hover:text-amber-400"
+                        >
+                            + Add Category
+                        </button>
+                    )}
+
+                    {showCategoryInput && (
+                        <CategoryInput
+                            onAdd={(newCategory) => {
+                                onAddCategory(newCategory);
+                                setShowCategoryInput(false);
+                                setCategory(newCategory.id);  // Auto-select the new category
+                            }}
+                            onCancel={() => setShowCategoryInput(false)}
+                        />
+                    )}
                 </div>
             )}
         </div>

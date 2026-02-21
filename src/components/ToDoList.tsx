@@ -3,7 +3,7 @@ import TaskInput from "./TaskInput";
 import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
-import type { CategoryEnum, ToDoList as ToDoListType, Task } from '../types';
+import type { CategoryEnum, Category, ToDoList as ToDoListType, Task } from '../types';
 
 interface IToDoListProps {
     list: ToDoListType;
@@ -12,15 +12,17 @@ interface IToDoListProps {
     onAddTask: (title: string, description?: string, category?: CategoryEnum) => void;
     onToggleTask: (id: number) => void;
     onDragTask: (event: DragEndEvent) => void;
+    categories: Category[];
+    onAddCategory: (category: Category) => void;
 }
 
-export default function ToDoList({ list, onRemoveTask, onEditTask, onAddTask, onToggleTask, onDragTask }: IToDoListProps) {    
+export default function ToDoList({ list, onRemoveTask, onEditTask, onAddTask, onToggleTask, onDragTask, categories, onAddCategory }: IToDoListProps) {    
     const activeTasks = list.tasks.filter(t => !t.isDone);
     const completedTasks = list.tasks.filter(t => t.isDone);
 
     return (
         <div className="space-y-6">
-            <TaskInput onAdd={onAddTask} />    
+            <TaskInput onAdd={onAddTask} categories={categories} onAddCategory={onAddCategory}/>    
 
             {/* Active Tasks */}
             <section>
@@ -44,6 +46,8 @@ export default function ToDoList({ list, onRemoveTask, onEditTask, onAddTask, on
                                     onEdit={onEditTask}
                                     onToggle={onToggleTask}
                                     onDelete={onRemoveTask}
+                                    categories={categories}
+                                    onAddCategory={onAddCategory}
                                 />
                             ))}
                         </ul>
@@ -74,6 +78,8 @@ export default function ToDoList({ list, onRemoveTask, onEditTask, onAddTask, on
                                 onEdit={onEditTask}
                                 onToggle={onToggleTask}
                                 onDelete={onRemoveTask}
+                                categories={categories}
+                                onAddCategory={onAddCategory}
                             />
                         ))}
                     </ul>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Task, CATEGORIES } from '../types';
+import { Task, Category } from '../types';
 import TaskInput from './TaskInput';
 
 interface ITaskItemProps {
@@ -9,9 +9,11 @@ interface ITaskItemProps {
     onEdit: (id: number, updates: Partial<Task>) => void;
     onToggle: (id: number) => void;
     onDelete: (id: number) => void;
+    categories: Category[];
+    onAddCategory: (category: Category) => void
 }
 
-export default function TaskItem({ task, onEdit, onToggle, onDelete }: ITaskItemProps) {
+export default function TaskItem({ task, onEdit, onToggle, onDelete, categories, onAddCategory }: ITaskItemProps) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -22,7 +24,7 @@ export default function TaskItem({ task, onEdit, onToggle, onDelete }: ITaskItem
         transition,
     };
 
-    const categoryConfig = task.category ? CATEGORIES.find(c => c.id === task.category) : null;
+    const categoryConfig = task.category ? categories.find(c => c.id === task.category) : null;
     const hasDescription = task.description && task.description.trim().length > 0;
     const isLongDescription = hasDescription && task.description!.length > 80;
 
@@ -45,6 +47,8 @@ export default function TaskItem({ task, onEdit, onToggle, onDelete }: ITaskItem
                         setIsEditing(false);
                     }}
                     onCancel={() => setIsEditing(false)}
+                    categories={categories}
+                    onAddCategory={onAddCategory}
                 />
             ) : (
                 <div className="flex items-center gap-3 p-3">
