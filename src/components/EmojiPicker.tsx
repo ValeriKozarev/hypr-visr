@@ -14,7 +14,7 @@ export default function EmojiPicker({value, onChange, defaultEmoji = '📝'}: IE
             value={value}
             options={EMOJI_OPTIONS}
             onChange={onChange}
-            renderTrigger={(emoji, isOpen) => (
+            renderTrigger={(emoji) => (
                 <button className='flex h-10 w-10 items-center justify-center rounded border border-zinc-600 bg-zinc-800 text-xl transition-colors hover:bg-zinc-700 hover:border-amber-400/50'>
                     {emoji || defaultEmoji}
                 </button>

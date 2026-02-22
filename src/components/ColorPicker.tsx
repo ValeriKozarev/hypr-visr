@@ -20,7 +20,7 @@ export default function ColorPicker({value, onChange, defaultColor = 'blue'}: IC
             value={value}
             options={colorNames}
             onChange={onChange}
-            renderTrigger={(colorName, isOpen) => {
+            renderTrigger={(colorName) => {
                 const hex = colorName ? COLOR_OPTIONS[colorName].hex : selectedHex;
                 return (
                     <button className="flex h-10 w-10 items-center justify-center rounded border border-zinc-600 bg-zinc-800 transition-colors hover:bg-zinc-700 hover:border-amber-400/50">
