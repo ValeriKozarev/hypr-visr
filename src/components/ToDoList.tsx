@@ -28,9 +28,11 @@ interface IToDoListProps {
 }
 
 export default function ToDoList({ list, onRemoveTask, onEditTask, onAddTask, onToggleTask, onDragTask, categories, onAddCategory, onDeleteCategory }: IToDoListProps) {
+    const [activeId, setActiveId] = useState<string | null>(null);
+    const [isHistoryCollapsed, setIsHistoryCollapsed] = useState(false);
+
     const activeTasks = list.tasks.filter(t => !t.isDone);
     const completedTasks = list.tasks.filter(t => t.isDone);
-    const [activeId, setActiveId] = useState<string | null>(null);
 
     // Optimized sensor - requires 5px movement before drag starts (prevents accidental drags)
     const sensors = useSensors(
@@ -131,21 +133,41 @@ export default function ToDoList({ list, onRemoveTask, onEditTask, onAddTask, on
                         <h2 className="text-xs font-medium uppercase tracking-wider text-neutral-500">
                             Completed
                         </h2>
+                        <span className="text-xs text-neutral-500">
+                            ({completedTasks.length})
+                        </span>
+                        <button
+                            onClick={() => setIsHistoryCollapsed(!isHistoryCollapsed)}
+                            className="ml-auto text-neutral-500 transition-colors hover:text-amber-400"
+                            aria-label={isHistoryCollapsed ? "Show completed tasks" : "Hide completed tasks"}
+                        >
+                            <svg
+                                className={`h-4 w-4 transition-transform ${isHistoryCollapsed ? '' : 'rotate-180'}`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
                     </div>
-                    <ul className="space-y-2">
-                        {completedTasks.map(task => (
-                            <TaskItem
-                                key={task.id}
-                                task={task}
-                                onEdit={onEditTask}
-                                onToggle={onToggleTask}
-                                onDelete={onRemoveTask}
-                                categories={categories}
-                                onAddCategory={onAddCategory}
-                                onDeleteCategory={onDeleteCategory}
-                            />
-                        ))}
-                    </ul>
+
+                    {!isHistoryCollapsed && (
+                        <ul className="space-y-2">
+                            {completedTasks.map(task => (
+                                <TaskItem
+                                    key={task.id}
+                                    task={task}
+                                    onEdit={onEditTask}
+                                    onToggle={onToggleTask}
+                                    onDelete={onRemoveTask}
+                                    categories={categories}
+                                    onAddCategory={onAddCategory}
+                                    onDeleteCategory={onDeleteCategory}
+                                />
+                            ))}
+                        </ul>
+                    )}
                 </section>
             )}
         </div>
