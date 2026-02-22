@@ -1,4 +1,4 @@
-import { useState, useRef, ReactNode } from "react";
+import { useState, useRef, useEffect, ReactNode } from "react";
 
 interface IPickerDropdownProps<T> {
     options: T[];
@@ -16,6 +16,33 @@ export default function PickerDropdown<T>({options, value, onChange, renderTrigg
         onChange(option);
         setIsOpen(false);
     }
+
+    // Handle click outside and Escape key
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const handleClickOutside = (e: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+
+        const handleEscapeKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                setIsOpen(false);
+            }
+        };
+
+        // Add listeners when dropdown opens
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('keydown', handleEscapeKey);
+
+        // Clean up listeners when dropdown closes or component unmounts
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleEscapeKey);
+        };
+    }, [isOpen]);
 
     return (
         <div className="relative" ref={dropdownRef}>

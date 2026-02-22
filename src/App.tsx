@@ -254,6 +254,7 @@ function App() {
 
                     {selectedList ? (
                         <ToDoList
+                            key={selectedList.id}
                             list={selectedList}
                             onRemoveTask={removeTaskFromList}
                             onEditTask={editTask}
