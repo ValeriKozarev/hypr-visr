@@ -20,8 +20,6 @@ export default function CategoryManager({categories, onAdd, onDelete, onClose}: 
     const [icon, setIcon] = useState('');
     const [selectedColor, setSelectedColor] = useState('blue');
 
-    const availableColors = Object.keys(COLOR_OPTIONS) as ColorName[];
-
     function handleAdd() {
         if (label.trim() && icon.trim()) {
             const config = COLOR_OPTIONS[selectedColor as ColorName];
@@ -66,14 +64,11 @@ export default function CategoryManager({categories, onAdd, onDelete, onClose}: 
                         {categories.map((cat) => (
                             <div
                                 key={cat.id}
-                                className="flex items-center justify-between rounded border border-zinc-700 bg-zinc-800 px-3 py-2"
+                                className={`flex items-center justify-between rounded border ${cat.borderColor} ${cat.bgColor} px-3 py-2`}
                             >
                                 <div className="flex items-center gap-2">
                                     <span className="text-sm">
                                         {cat.icon} {cat.label}
-                                    </span>
-                                    <span className={`text-xs ${cat.color}`}>
-                                        {cat.color.replace('text-', '').replace('-400', '')}
                                     </span>
                                 </div>
                                 <button
@@ -126,8 +121,7 @@ export default function CategoryManager({categories, onAdd, onDelete, onClose}: 
                 <button
                     onClick={handleAdd}
                     disabled={!label.trim() || !icon.trim()}
-                    className="w-full rounded bg-amber-400 px-3 py-2 text-sm font-medium text-zinc-900 transition-all hover:bg-amber-300 disabled:opacity-50
-disabled:cursor-not-allowed"
+                    className="w-full rounded bg-amber-400 px-3 py-2 text-sm font-medium text-zinc-900 transition-all hover:bg-amber-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     Add Category
                 </button>

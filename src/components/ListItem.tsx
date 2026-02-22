@@ -91,7 +91,6 @@ export default function ListItem({list, isSelected, isEditing, onSelect, onStart
                         }}
                     />
 
-                    {/* Save button */}
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
@@ -105,7 +104,6 @@ export default function ListItem({list, isSelected, isEditing, onSelect, onStart
                         </svg>
                     </button>
 
-                    {/* Cancel button */}
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
@@ -137,7 +135,7 @@ export default function ListItem({list, isSelected, isEditing, onSelect, onStart
                             </svg>
                         </span>
                     )}
-                    <span className="flex-1 truncate">
+                    <span className="flex-1 truncate ml-1">
                         {list.icon && <span className="mr-2">{list.icon}</span>}
                         {list.name}
                     </span>

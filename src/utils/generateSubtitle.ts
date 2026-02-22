@@ -14,7 +14,6 @@ const SUBTITLES = [
     "Don't worry, you'll get it done.",
     "Small wins add up!",
     "Momentum is real, don't stop now!",
-    "Strong leaders think about creating systems.",
     "Completing a task is good, building a habit is better.",
 ]
 
