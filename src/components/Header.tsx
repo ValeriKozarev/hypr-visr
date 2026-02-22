@@ -2,12 +2,7 @@ import { useState } from "react";
 import { generateSubtitle } from "../utils/generateSubtitle";
 
 export default function Header() {
-    const [subtitle, setSubtitle] = useState('');
-
-    // TODO: is there a way to write this in more idiomatic React?
-    if (subtitle === '') {
-        setSubtitle(generateSubtitle())
-    }
+    const [subtitle] = useState(() => generateSubtitle());
 
     return (
         <header className="mb-10 text-center">
