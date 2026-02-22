@@ -69,43 +69,38 @@ A local-first todo/task management desktop app built with Tauri and React.
 ```
 hypr-visr/
 ├── src/                    # React frontend
-│   ├── App.tsx             # Main app component
-│   ├── App.css             # Global styles and font imports
-│   ├── components/
-│   │   ├── ToDoList.tsx    # Task list with state management
-│   │   ├── TaskItem.tsx    # Individual task with drag handle
-│   │   └── TaskInput.tsx   # Task creation form
-│   └── types.ts            # TypeScript types and category definitions
+│   ├── App.tsx             # Main app component and state management
+│   ├── types.ts            # TypeScript types and category definitions
+│   ├── components/         # UI components (lists, tasks, categories, pickers)
+│   └── utils/              # Helper functions (ID generation, colors, emojis)
 ├── src-tauri/              # Rust backend
-│   ├── src/
-│   │   ├── main.rs         # Entry point
-│   │   └── lib.rs          # Tauri commands (load/save tasks)
-│   ├── Cargo.toml          # Rust dependencies
+│   ├── src/lib.rs          # Tauri commands (load_app_data / save_app_data)
 │   └── tauri.conf.json     # Tauri configuration
-└── public/                 # Static assets (fonts, icons)
+└── public/                 # Static assets (fonts, icons, screenshots)
 ```
 
 ## Architecture
 
-React handles all UI, state management, and business logic. Rust handles only persistence (reading/writing tasks to disk).
+React handles all UI, state management, and business logic. Rust handles only persistence (reading/writing data to disk).
 
 ```
 ┌─────────────────────────────────────────┐
 │                 REACT                   │
 │  • Rendering and UI                     │
 │  • Drag-and-drop (dnd-kit)              │
-│  • Task CRUD operations                 │
-│  • Category/color management            │
+│  • List and task CRUD operations        │
+│  • Custom category management           │
+│  • Auto-save on every state change      │
 ├─────────────────────────────────────────┤
-│            invoke() / listen()          │
+│               invoke()                  │
 ├─────────────────────────────────────────┤
 │                 RUST                    │
-│  • load_tasks() - read from disk        │
-│  • save_tasks() - write to disk         │
+│  • load_app_data() - read from disk     │
+│  • save_app_data() - write to disk      │
 └─────────────────────────────────────────┘
 ```
 
-Tasks are stored as JSON at `~/.hypr-visr/tasks.json`.
+All app data (lists, tasks, and custom categories) is stored as JSON at `~/.hypr-visr/tasks.json`.
 
 ## Available Scripts
 
