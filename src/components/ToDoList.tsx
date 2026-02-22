@@ -97,7 +97,6 @@ export default function ToDoList({ list, onRemoveTask, onEditTask, onAddTask, on
                         </ul>
                     </SortableContext>
 
-                    {/* DragOverlay provides smooth dragging */}
                     <DragOverlay>
                         {activeTask ? (
                             <div className="cursor-grabbing">

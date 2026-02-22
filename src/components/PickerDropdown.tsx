@@ -1,5 +1,4 @@
 import { useState, useRef, ReactNode } from "react";
-import {  } from "react";
 
 interface IPickerDropdownProps<T> {
     options: T[];
@@ -26,12 +25,9 @@ export default function PickerDropdown<T>({options, value, onChange, renderTrigg
 
             {isOpen && (
                 <>
-                    {/* Arrow pointer - outer border */}
                     <div className="absolute left-3 top-full z-20 h-0 w-0 border-x-8 border-b-8 border-x-transparent border-b-zinc-600" />
-                    {/* Arrow pointer - inner fill */}
                     <div className="absolute left-[13px] top-[41px] z-20 h-0 w-0 border-x-[7px] border-b-[7px] border-x-transparent border-b-zinc-800" />
 
-                    {/* Dropdown content */}
                     <div className="absolute left-0 top-full z-10 mt-2 w-48 rounded border border-zinc-600 bg-zinc-800 p-2 shadow-lg">
                         <div className="grid grid-cols-4 gap-1">
                             {options.map((option, index) => {

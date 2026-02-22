@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import CategoryManager from './CategoryManager';
+
 import type { Task, Category } from '../types';
 
 interface ITaskInputProps {
-    // For add mode
     onAdd?: (title: string, description?: string, category?: string) => void;
 
-    // For edit mode
     initialTask?: Task;
     onSave?: (updates: Partial<Task>) => void;
     onCancel?: () => void;

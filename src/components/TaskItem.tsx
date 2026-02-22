@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Task, Category } from '../types';
 import TaskInput from './TaskInput';
+
+import type { Task, Category } from '../types';
 
 interface ITaskItemProps {
     task: Task;
@@ -70,7 +71,6 @@ export default function TaskItem({ task, onEdit, onToggle, onDelete, categories,
                 />
             ) : (
                 <div className="flex items-center gap-3 p-3">
-                    {/* Handle for drag 'n drop */}
                     {!task.isDone && (
                         <span
                             {...listeners}
@@ -88,7 +88,6 @@ export default function TaskItem({ task, onEdit, onToggle, onDelete, categories,
                         </span>
                     )}
 
-                    {/* Checkbox for toggling task completion */}
                     <input
                         type="checkbox"
                         checked={task.isDone}
@@ -116,7 +115,6 @@ export default function TaskItem({ task, onEdit, onToggle, onDelete, categories,
                             )}
                         </div>
 
-                        {/* Description - clickable to expand */}
                         {hasDescription && (
                             <p className={`mt-1 text-xs text-neutral-400 ${
                                 !isExpanded && isLongDescription ? 'truncate' : ''
@@ -126,7 +124,6 @@ export default function TaskItem({ task, onEdit, onToggle, onDelete, categories,
                         )}
                     </div>
 
-                    {/* buttons */}
                     <button
                         onClick={() => setIsEditing(true)}
                         className="shrink-0 rounded p-1 text-zinc-600 opacity-0 transition-all hover:bg-zinc-700 hover:text-amber-400 group-hover:opacity-100"                    

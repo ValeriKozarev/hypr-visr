@@ -144,7 +144,6 @@ export default function ListItem({list, isSelected, isEditing, onSelect, onStart
 
             {!isEditing && !isOverlay && (
                 <div className="flex shrink-0 items-center gap-1">
-                    {/* Edit button */}
                     <button
                         className="shrink-0 rounded p-1 text-zinc-600 opacity-0 transition-all hover:bg-zinc-700 hover:text-amber-400 group-hover:opacity-100"
                         onClick={(e) => {
@@ -158,7 +157,6 @@ export default function ListItem({list, isSelected, isEditing, onSelect, onStart
                         </svg>
                     </button>
 
-                    {/* Delete button */}
                     <button
                         className="shrink-0 rounded p-1 text-zinc-600 opacity-0 transition-all hover:bg-red-950/50 hover:text-red-400 group-hover:opacity-100"
                         onClick={(e) => {
