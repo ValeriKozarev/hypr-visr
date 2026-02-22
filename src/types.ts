@@ -18,5 +18,6 @@ export type Task = {
 export type ToDoList = {
     id: string;
     name: string;
+    icon?: string;
     tasks: Task[];
 }

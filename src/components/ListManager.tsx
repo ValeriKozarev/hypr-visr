@@ -20,9 +20,9 @@ interface IListManagerProps {
     selectedListId: string | null;
     onListSelect: (id: string) => void;
     onDragList: (event: DragEndEvent) => void;
-    onAddList: (name: string) => void;
+    onAddList: (name: string, icon?: string) => void;
     onDeleteList: (id: string) => void;
-    onRenameList: (id: string, name: string) => void;
+    onRenameList: (id: string, name: string, icon?: string) => void;
 }
 
 export default function ListManager({lists, selectedListId, onListSelect, onDragList, onAddList, onDeleteList, onRenameList}: IListManagerProps) {
@@ -74,8 +74,8 @@ export default function ListManager({lists, selectedListId, onListSelect, onDrag
                                 isEditing={editingListId === list.id}
                                 onSelect={onListSelect}
                                 onStartEdit={() => setEditingListId(list.id)}
-                                onSaveEdit={(name: string) => {
-                                    onRenameList(list.id, name);
+                                onSaveEdit={(name: string, icon?: string) => {
+                                    onRenameList(list.id, name, icon);
                                     setEditingListId(null);
                                 }}
                                 onCancelEdit={() => setEditingListId(null)}

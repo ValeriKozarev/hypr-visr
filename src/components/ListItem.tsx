@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+import EmojiPicker from './EmojiPicker';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -10,7 +12,7 @@ interface IListItemProps {
 
     onSelect: (id: string) => void;
     onStartEdit: () => void;
-    onSaveEdit: (name: string) => void;
+    onSaveEdit: (name: string, icon?: string) => void;
     onCancelEdit: () => void;
     onDelete: (id: string) => void;
 
@@ -19,7 +21,17 @@ interface IListItemProps {
 }
 
 export default function ListItem({list, isSelected, isEditing, onSelect, onStartEdit, onSaveEdit, onCancelEdit, onDelete, isDragging, isOverlay}: IListItemProps) {
-    
+    const [editIcon, setEditIcon] = useState<string | undefined>(list.icon || '📜');
+    const [editName, setEditName] = useState<string>(list.name);
+
+    // Reset icon and name when entering edit mode
+    useEffect(() => {
+        if (isEditing) {
+            setEditIcon(list.icon || '📜');
+            setEditName(list.name);
+        }
+    }, [isEditing, list.icon, list.name]);
+
     const {
         attributes,
         listeners,
@@ -56,23 +68,57 @@ export default function ListItem({list, isSelected, isEditing, onSelect, onStart
             }}
         >
             {isEditing ? (
-                <input
-                    autoFocus
-                    defaultValue={list.name}
-                    className="flex-1 bg-zinc-800 rounded px-2 py-1 text-neutral-100 text-sm focus:outline-none focus:ring-1 focus:ring-amber-400/50"
-                    onClick={(e) => e.stopPropagation()}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                            onSaveEdit(e.currentTarget.value.trim());
-                        }
-                        if (e.key === 'Escape') {
+                <div className="flex min-w-0 flex-1 items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                    <EmojiPicker
+                        value={editIcon}
+                        onChange={setEditIcon}
+                        defaultEmoji='📜'
+                    />
+
+                    <input
+                        autoFocus
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        className="min-w-0 flex-1 bg-zinc-800 rounded px-2 py-1 text-neutral-100 text-sm focus:outline-none focus:ring-1 focus:ring-amber-400/50"
+                        onClick={(e) => e.stopPropagation()}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                onSaveEdit(editName.trim(), editIcon);
+                            }
+                            if (e.key === 'Escape') {
+                                onCancelEdit();
+                            }
+                        }}
+                    />
+
+                    {/* Save button */}
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onSaveEdit(editName.trim(), editIcon);
+                        }}
+                        className="shrink-0 rounded p-1 text-green-400 transition-colors hover:bg-green-950/50"
+                        aria-label="Save"
+                    >
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                    </button>
+
+                    {/* Cancel button */}
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
                             onCancelEdit();
-                        }
-                    }}
-                    onBlur={(e) => {
-                        onSaveEdit(e.target.value.trim());
-                    }}
-                />
+                        }}
+                        className="shrink-0 rounded p-1 text-red-400 transition-colors hover:bg-red-950/50"
+                        aria-label="Cancel"
+                    >
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
             ) : (
                 <>
                     {!isOverlay && (
@@ -91,7 +137,10 @@ export default function ListItem({list, isSelected, isEditing, onSelect, onStart
                             </svg>
                         </span>
                     )}
-                    <span className="flex-1 truncate">{list.name}</span>
+                    <span className="flex-1 truncate">
+                        {list.icon && <span className="mr-2">{list.icon}</span>}
+                        {list.name}
+                    </span>
                 </>
             )}
 

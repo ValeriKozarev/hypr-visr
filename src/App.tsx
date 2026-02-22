@@ -119,10 +119,11 @@ function App() {
     }
     //#endregion
     //#region List operations
-    function addList(name: string) {
+    function addList(name: string, icon?: string) {
         const newList: ToDoListType = {
             id: generateId(),
             name,
+            icon,
             tasks: []
         };
         setAllToDoLists(lists => [newList, ...lists, ]);
@@ -137,9 +138,9 @@ function App() {
         }
     }
 
-    function renameList(id: string, name: string) {
+    function renameList(id: string, name: string, icon?: string) {
         setAllToDoLists(lists => lists.map(list =>
-            list.id === id ? { ...list, name } : list
+            list.id === id ? { ...list, name, icon } : list
         ));
     }
 
@@ -185,7 +186,7 @@ function App() {
     return (
         <div className="flex h-screen bg-zinc-900 text-neutral-100 antialiased">
             {/* Sidebar */}
-            <aside className="w-64 shrink-0 border-r border-zinc-700/50 bg-zinc-950 p-4 overflow-y-auto">
+            <aside className="w-80 shrink-0 border-r border-zinc-700/50 bg-zinc-950 p-4 overflow-y-auto">
                 <ListManager
                     lists={allToDoLists}
                     selectedListId={selectedListId}

@@ -20,9 +20,9 @@ export default function PickerDropdown<T>({options, value, onChange, renderTrigg
 
     return (
         <div className="relative" ref={dropdownRef}>
-            <button onClick={() => setIsOpen(!isOpen)}>
+            <div onClick={() => setIsOpen(!isOpen)}>
                 {renderTrigger(value, isOpen)}
-            </button>
+            </div>
 
             {isOpen && (
                 <>

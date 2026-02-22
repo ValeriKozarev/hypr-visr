@@ -28,6 +28,7 @@ struct Category {
 struct ToDoList {
     id: String,
     name: String,
+    icon: Option<String>,
     tasks: Vec<Task>,
 }
 
