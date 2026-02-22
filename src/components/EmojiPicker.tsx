@@ -24,6 +24,7 @@ export default function EmojiPicker({value, onChange, defaultEmoji = '📝'}: IE
                     {emoji}
                 </span>
             )}
+            align="left"
         />
     )
 }

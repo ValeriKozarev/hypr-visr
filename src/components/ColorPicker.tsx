@@ -40,6 +40,7 @@ export default function ColorPicker({value, onChange, defaultColor = 'blue'}: IC
                     />
                 );
             }}
+            align="right"
         />
     );
 }

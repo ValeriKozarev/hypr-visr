@@ -56,18 +56,4 @@ export const COLOR_OPTIONS = {
         bgColor: 'bg-teal-950/30',
         borderColor: 'border-teal-500/50',
     },
-    orange: {
-        name: 'orange',
-        hex: '#f97316',
-        color: 'text-orange-400',
-        bgColor: 'bg-orange-950/30',
-        borderColor: 'border-orange-500/50',
-    },
-    cyan: {
-        name: 'cyan',
-        hex: '#06b6d4',
-        color: 'text-cyan-400',
-        bgColor: 'bg-cyan-950/30',
-        borderColor: 'border-cyan-500/50',
-    },
 }
