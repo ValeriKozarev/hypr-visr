@@ -17,9 +17,48 @@ function App() {
     const [selectedListId, setSelectedListId] = useState<string | null>(null);
     const [categories, setCategories] = useState<Category[]>([]);
     const [showSplash, setShowSplash] = useState(true);
+    const [sidebarWidth, setSidebarWidth] = useState(320);
+    const [isResizing, setIsResizing] = useState(false);
 
-    // computed the list thats selected so it plays nice with React
-    const selectedList = allToDoLists.find(list => list.id === selectedListId);
+    // some constraints for how much you can resize
+    const MIN_WIDTH = 240;
+    const MAX_WIDTH = 360;
+
+    const handleMouseDown = (e: React.MouseEvent) => {
+        e.preventDefault();
+        setIsResizing(true);
+    };
+
+    useEffect(() => {
+        const handleMouseMove = (e: MouseEvent) => {
+            if (!isResizing) return;
+
+            const newWidth = e.clientX;
+            if (newWidth >= MIN_WIDTH && newWidth <= MAX_WIDTH) {
+                setSidebarWidth(newWidth);
+            }
+        };
+
+        const handleMouseUp = () => {
+            setIsResizing(false);
+        };
+
+        if (isResizing) {
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+
+            // Prevent text selection during resize
+            document.body.style.userSelect = 'none';
+            document.body.style.cursor = 'col-resize';
+        }
+
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+            document.body.style.userSelect = '';
+            document.body.style.cursor = '';
+        };
+    }, [isResizing, MIN_WIDTH, MAX_WIDTH])
 
     useEffect(() => {
         const minDelay = new Promise(resolve => setTimeout(resolve, 1500));
@@ -40,6 +79,9 @@ function App() {
             invoke('save_app_data', { categories, lists: allToDoLists });
         }
     }, [allToDoLists, categories]);
+
+    // computed the list thats selected so it plays nice with React
+    const selectedList = allToDoLists.find(list => list.id === selectedListId);
 
     //#region Task operations
     function removeTaskFromList(id: string) {
@@ -185,8 +227,7 @@ function App() {
 
     return (
         <div className="flex h-screen bg-zinc-900 text-neutral-100 antialiased">
-            {/* Sidebar */}
-            <aside className="w-80 shrink-0 border-r border-zinc-700/50 bg-zinc-950 p-4 overflow-y-auto">
+            <aside className="shrink-0 border-r border-zinc-700/50 bg-zinc-950 p-4 overflow-y-auto" style={{width: `${sidebarWidth}px`}}>
                 <ListManager
                     lists={allToDoLists}
                     selectedListId={selectedListId}
@@ -198,7 +239,15 @@ function App() {
                 />
             </aside>
 
-            {/* Main content */}
+            <div
+                onMouseDown={handleMouseDown}
+                className={`w-1 hover:w-2 cursor-col-resize transition-all ${
+                    isResizing
+                        ? 'bg-amber-400 w-2'
+                        : 'bg-zinc-700/30 hover:bg-amber-400/50'
+                }`}
+            />
+
             <main className="flex-1 overflow-y-auto">
                 <div className="mx-auto max-w-2xl px-8 py-12">
                     <Header />
