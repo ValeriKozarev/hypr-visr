@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import EmojiPicker from './EmojiPicker';
+import ColorPicker from './ColorPicker';
 import { generateId } from '../utils/generateId';
 import { COLOR_OPTIONS } from '../utils/colors';
 
 import type { Category } from '../types';
-import EmojiPicker from './EmojiPicker';
 
 type ColorName = keyof typeof COLOR_OPTIONS;
 
@@ -115,27 +116,11 @@ export default function CategoryManager({categories, onAdd, onDelete, onClose}: 
                         onChange={(e) => setLabel(e.target.value)}
                         className="flex-1 rounded border border-zinc-600 bg-zinc-800 px-3 py-2 text-sm text-neutral-100 placeholder-neutral-500 focus:border-amber-400/50 focus:outline-none focus:ring-2 focus:ring-amber-400/20"
                     />
-                </div>
 
-                <div>
-                    <div className="mb-2 text-xs text-neutral-400">Color:</div>
-                    <div className="flex flex-wrap gap-2">
-                    {availableColors.map((color) => (
-                        <button
-                            key={color}
-                            onClick={() => setSelectedColor(color)}
-                            className={`h-8 w-8 rounded-full border-2 transition-all ${
-                                selectedColor === color
-                                    ? 'ring-2 ring-amber-400 scale-110'
-                                    : 'border-zinc-600 hover:scale-105'
-                            }`}
-                            style={{
-                                backgroundColor: COLOR_OPTIONS[color].hex,
-                            }}
-                            aria-label={`Select ${color} color`}
-                        />
-                    ))}
-                    </div>
+                    <ColorPicker
+                        value={selectedColor as ColorName}
+                        onChange={(colorName) => setSelectedColor(colorName)}
+                    />
                 </div>
 
                 <button
