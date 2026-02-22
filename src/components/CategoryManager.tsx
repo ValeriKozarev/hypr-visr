@@ -101,21 +101,21 @@ export default function CategoryManager({categories, onAdd, onDelete, onClose}: 
 
             <div className="space-y-3">
                 <div className="text-xs text-neutral-400">Add New Category:</div>
+                <div className="flex gap-2">
+                    <EmojiPicker
+                        value={icon}
+                        onChange={setIcon}
+                    />
 
-                <input
-                    type="text"
-                    placeholder="Category name..."
-                    maxLength={12}
-                    value={label}
-                    onChange={(e) => setLabel(e.target.value)}
-                    className="w-full rounded border border-zinc-600 bg-zinc-800 px-3 py-2 text-sm text-neutral-100 placeholder-neutral-500 focus:border-amber-400/50
-focus:outline-none focus:ring-2 focus:ring-amber-400/20"
-                />
-
-                <EmojiPicker
-                    value={icon}
-                    onChange={setIcon}
-                />
+                    <input
+                        type="text"
+                        placeholder="Category name..."
+                        maxLength={12}
+                        value={label}
+                        onChange={(e) => setLabel(e.target.value)}
+                        className="flex-1 rounded border border-zinc-600 bg-zinc-800 px-3 py-2 text-sm text-neutral-100 placeholder-neutral-500 focus:border-amber-400/50 focus:outline-none focus:ring-2 focus:ring-amber-400/20"
+                    />
+                </div>
 
                 <div>
                     <div className="mb-2 text-xs text-neutral-400">Color:</div>
