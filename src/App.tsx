@@ -3,6 +3,7 @@ import ToDoList from "./components/ToDoList";
 import Header from "./components/Header";
 import ListManager from "./components/ListManager";
 import { invoke } from '@tauri-apps/api/core';
+import { listen } from '@tauri-apps/api/event';
 import { DragEndEvent } from '@dnd-kit/core';
 import { arrayMove} from '@dnd-kit/sortable';
 import { generateId } from './utils/generateId';
@@ -71,6 +72,17 @@ function App() {
             hasLoaded.current = true;
             setShowSplash(false);
         });
+    }, []);
+
+    // Reload when tasks.json is changed externally (e.g. Alfred workflow)
+    useEffect(() => {
+        const unlisten = listen('tasks-changed', () => {
+            invoke<{ categories: Category[], lists: ToDoListType[] }>('load_app_data').then(data => {
+                setCategories(data.categories);
+                setAllToDoLists(data.lists);
+            });
+        });
+        return () => { unlisten.then(fn => fn()); };
     }, []);
 
     // Save when anything changes (but not before initial load)
