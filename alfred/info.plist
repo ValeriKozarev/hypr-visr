@@ -85,25 +85,41 @@
 				<integer>0</integer>
 				<key>script</key>
 				<string>/usr/bin/python3 -c '
-import json, sys, uuid, os
+import json, sys, uuid, os, time
 
 tasks_file = os.path.expanduser("~/.hypr-visr/tasks.json")
+tmp_file = os.path.join(os.path.dirname(tasks_file), ".tasks.json.tmp")
 title = sys.argv[1]
 
-try:
-    with open(tasks_file) as f:
-        data = json.load(f)
+def read_data():
+    # Retry a few times in case the app is mid-write (file briefly truncated/replaced).
+    for attempt in range(5):
+        try:
+            with open(tasks_file) as f:
+                return json.load(f)
+        except (json.JSONDecodeError, ValueError):
+            if attempt == 4:
+                raise
+            time.sleep(0.05)
 
+try:
+    data = read_data()
     task = {"id": str(uuid.uuid4()), "title": title, "isDone": False}
 
-    if data.get("lists"):
-        data["lists"][0]["tasks"].insert(0, task)
-        with open(tasks_file, "w") as f:
-            json.dump(data, f, indent=2)
-        print(title)
-    else:
-        print("Error: No lists found in hypr-visr")
-        sys.exit(1)
+    lists = data.setdefault("lists", [])
+    alfred_list = next((l for l in lists if l.get("name") == "Alfred"), None)
+    if alfred_list is None:
+        alfred_list = {"id": str(uuid.uuid4()), "name": "Alfred", "icon": "🎩", "tasks": []}
+        lists.append(alfred_list)
+
+    alfred_list["tasks"].insert(0, task)
+
+    # Atomic write: write to a temp file then rename so tasks.json is never truncated.
+    with open(tmp_file, "w") as f:
+        json.dump(data, f, indent=2)
+    os.replace(tmp_file, tasks_file)
+
+    print(title)
 except FileNotFoundError:
     print("Error: hypr-visr data file not found. Open hypr-visr first.")
     sys.exit(1)
@@ -159,7 +175,7 @@ except Exception as e:
 
 Example: todo Buy groceries
 
-The todo will be added to the first list in hypr-visr.
+The todo will be added to the "Alfred" list in hypr-visr (created automatically if it doesn't exist).
 
 Requirements: hypr-visr must have been opened at least once so that ~/.hypr-visr/tasks.json exists.</string>
 	<key>uidata</key>

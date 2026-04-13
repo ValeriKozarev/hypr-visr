@@ -76,13 +76,19 @@ fn load_app_data() -> AppData {
 
 #[tauri::command]
 fn save_app_data(categories: Vec<Category>, lists: Vec<ToDoList>) {
-    // Mark that the next file-change event is ours so the watcher skips it.
-    SELF_SAVE.store(true, Ordering::SeqCst);
-
     let path = get_data_path();
+    let tmp_path = path.with_file_name(".tasks.json.tmp");
+
     let data = AppData { categories, lists };
     let json = serde_json::to_string_pretty(&data).expect("Failed to serialize");
-    fs::write(&path, json).expect("Failed to write file");
+
+    // Write to a temp file first so tasks.json is never in a truncated/partial state.
+    fs::write(&tmp_path, &json).expect("Failed to write temp file");
+
+    // Set the flag right before the atomic rename so the window where SELF_SAVE
+    // is true but the new file isn't on disk yet is as small as possible.
+    SELF_SAVE.store(true, Ordering::SeqCst);
+    fs::rename(&tmp_path, &path).expect("Failed to rename temp file");
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
