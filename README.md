@@ -119,6 +119,27 @@ npm run tauri build
 
 This creates a distributable app bundle in `src-tauri/target/release/bundle/`.
 
+## Alfred Workflow
+
+The `alfred/hypr-visr-todo.alfredworkflow` lets you add tasks to hypr-visr directly from Alfred without switching to the app.
+
+### Setup
+
+1. Open hypr-visr at least once so it creates `~/.hypr-visr/tasks.json`.
+2. Double-click `alfred/hypr-visr-todo.alfredworkflow` to import it into Alfred.
+3. That's it.
+
+### Usage
+
+Type `todo ` followed by your task title in Alfred and press Return.
+
+```
+todo Buy groceries
+todo Call dentist
+```
+
+The task is added to the **Alfred** list (🎩) in hypr-visr. The list is created automatically the first time you use the workflow.
+
 ## License
 
 MIT

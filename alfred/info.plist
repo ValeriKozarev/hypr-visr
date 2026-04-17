@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.hyprvisr.addtodo</string>
+	<key>category</key>
+	<string>Productivity</string>
+	<key>connections</key>
+	<dict>
+		<key>9F8E7D6C-5B4A-3210-FEDC-BA9876543210</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>1A2B3C4D-5E6F-7890-ABCD-EF1234567890</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>1A2B3C4D-5E6F-7890-ABCD-EF1234567890</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A1B2C3D4-E5F6-7890-1234-567890ABCDEF</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>hypr-visr</string>
+	<key>description</key>
+	<string>Add todo items to hypr-visr with "todo {title}"</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>hypr-visr Todo</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>keyword</key>
+				<string>todo</string>
+				<key>runningsubtext</key>
+				<string>Adding todo to hypr-visr...</string>
+				<key>subtext</key>
+				<string>Add a new todo to hypr-visr</string>
+				<key>text</key>
+				<string>Add Todo to hypr-visr</string>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>9F8E7D6C-5B4A-3210-FEDC-BA9876543210</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>script</key>
+				<string>/usr/bin/python3 -c '
+import json, sys, uuid, os, time
+
+tasks_file = os.path.expanduser("~/.hypr-visr/tasks.json")
+tmp_file = os.path.join(os.path.dirname(tasks_file), ".tasks.json.tmp")
+title = sys.argv[1]
+
+def read_data():
+    # Retry a few times in case the app is mid-write (file briefly truncated/replaced).
+    for attempt in range(5):
+        try:
+            with open(tasks_file) as f:
+                return json.load(f)
+        except (json.JSONDecodeError, ValueError):
+            if attempt == 4:
+                raise
+            time.sleep(0.05)
+
+try:
+    data = read_data()
+    task = {"id": str(uuid.uuid4()), "title": title, "isDone": False}
+
+    lists = data.setdefault("lists", [])
+    alfred_list = next((l for l in lists if l.get("name") == "Alfred"), None)
+    if alfred_list is None:
+        alfred_list = {"id": str(uuid.uuid4()), "name": "Alfred", "icon": "🎩", "tasks": []}
+        lists.append(alfred_list)
+
+    alfred_list["tasks"].insert(0, task)
+
+    # Atomic write: write to a temp file then rename so tasks.json is never truncated.
+    with open(tmp_file, "w") as f:
+        json.dump(data, f, indent=2)
+    os.replace(tmp_file, tasks_file)
+
+    print(title)
+except FileNotFoundError:
+    print("Error: hypr-visr data file not found. Open hypr-visr first.")
+    sys.exit(1)
+except Exception as e:
+    print("Error: " + str(e))
+    sys.exit(1)
+' "$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>1A2B3C4D-5E6F-7890-ABCD-EF1234567890</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>removeextension</key>
+				<false/>
+				<key>sticky</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Added to hypr-visr</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>A1B2C3D4-E5F6-7890-1234-567890ABCDEF</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+	</array>
+	<key>icon</key>
+	<dict>
+		<key>path</key>
+		<string>icon.png</string>
+	</dict>
+	<key>readme</key>
+	<string>Type "todo " followed by your todo title to add it to hypr-visr.
+
+Example: todo Buy groceries
+
+The todo will be added to the "Alfred" list in hypr-visr (created automatically if it doesn't exist).
+
+Requirements: hypr-visr must have been opened at least once so that ~/.hypr-visr/tasks.json exists.</string>
+	<key>uidata</key>
+	<dict>
+		<key>9F8E7D6C-5B4A-3210-FEDC-BA9876543210</key>
+		<dict>
+			<key>xpos</key>
+			<real>50</real>
+			<key>ypos</key>
+			<real>50</real>
+		</dict>
+		<key>1A2B3C4D-5E6F-7890-ABCD-EF1234567890</key>
+		<dict>
+			<key>xpos</key>
+			<real>280</real>
+			<key>ypos</key>
+			<real>50</real>
+		</dict>
+		<key>A1B2C3D4-E5F6-7890-1234-567890ABCDEF</key>
+		<dict>
+			<key>xpos</key>
+			<real>510</real>
+			<key>ypos</key>
+			<real>50</real>
+		</dict>
+	</dict>
+	<key>version</key>
+	<string>1.0.0</string>
+	<key>webaddress</key>
+	<string></string>
+</dict>
+</plist>
